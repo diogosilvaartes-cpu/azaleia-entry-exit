@@ -7,6 +7,7 @@ import { AuthProvider, ProtectedRoute } from "@/hooks/useAuth";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import NewEntry from "./pages/NewEntry";
+import NewExit from "./pages/NewExit";
 import HistoryPage from "./pages/HistoryPage";
 import NotFound from "./pages/NotFound";
 
@@ -23,6 +24,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/new" element={<ProtectedRoute><NewEntry /></ProtectedRoute>} />
+            <Route path="/exit" element={<ProtectedRoute><NewExit /></ProtectedRoute>} />
             <Route path="/history" element={<ProtectedRoute><HistoryPage /></ProtectedRoute>} />
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="*" element={<NotFound />} />
