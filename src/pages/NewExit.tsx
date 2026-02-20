@@ -1,10 +1,13 @@
-import { Link } from "react-router-dom";
+import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import AppLayout from "@/components/AppLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { PlusCircle, LogIn, LogOut as LogOutIcon, Users, Clock } from "lucide-react";
-import { useActiveEntries, useTodayStats, useRegisterExit } from "@/hooks/useAccessLogs";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { LogOut, ArrowLeft, Search, Check } from "lucide-react";
+import { useActiveEntries, useRegisterExit } from "@/hooks/useAccessLogs";
 import { useToast } from "@/hooks/use-toast";
 import {
   AlertDialog,
@@ -21,109 +24,75 @@ import {
 const formatTime = (iso: string) =>
   new Date(iso).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
-const Dashboard = () => {
-  const { data: stats, isLoading: statsLoading } = useTodayStats();
-  const { data: active, isLoading: activeLoading } = useActiveEntries();
+const NewExit = () => {
+  const navigate = useNavigate();
+  const { data: active, isLoading } = useActiveEntries();
   const registerExit = useRegisterExit();
   const { toast } = useToast();
+  const [search, setSearch] = useState("");
+
+  const filtered = useMemo(() => {
+    if (!active) return [];
+    if (!search.trim()) return active;
+    const q = search.toLowerCase();
+    return active.filter(
+      (log) =>
+        log.driver_name.toLowerCase().includes(q) ||
+        (log.plate && log.plate.toLowerCase().includes(q)) ||
+        log.destination.toLowerCase().includes(q) ||
+        log.authorized_by.toLowerCase().includes(q)
+    );
+  }, [active, search]);
 
   const handleExit = async (id: string) => {
     try {
       await registerExit.mutateAsync(id);
-      toast({ title: "Saída registrada com sucesso" });
+      toast({ title: "Saída registrada com sucesso!" });
+      if (filtered.length <= 1) navigate("/dashboard");
     } catch {
       toast({ title: "Erro ao registrar saída", variant: "destructive" });
     }
   };
 
-  const statCards = [
-    {
-      label: "Entradas Hoje",
-      value: stats?.entries ?? 0,
-      icon: LogIn,
-      color: "text-primary",
-    },
-    {
-      label: "Saídas Hoje",
-      value: stats?.exits ?? 0,
-      icon: LogOutIcon,
-      color: "text-success",
-    },
-    {
-      label: "Ativos Agora",
-      value: stats?.active ?? 0,
-      icon: Users,
-      color: "text-warning",
-    },
-  ];
-
   return (
     <AppLayout>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Painel</h1>
-          <p className="text-sm text-muted-foreground">
-            {new Date().toLocaleDateString("pt-BR", {
-              weekday: "long",
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })}
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Link to="/new">
-            <Button className="gap-2">
-              <PlusCircle className="h-4 w-4" />
-              Nova Entrada
-            </Button>
-          </Link>
-          <Link to="/exit">
-            <Button variant="outline" className="gap-2 border-success text-success hover:bg-success hover:text-success-foreground">
-              <LogOutIcon className="h-4 w-4" />
-              Nova Saída
-            </Button>
-          </Link>
-        </div>
+      <div className="mb-6">
+        <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="mb-2 gap-1">
+          <ArrowLeft className="h-4 w-4" /> Voltar
+        </Button>
+        <h1 className="text-2xl font-bold text-foreground">Registrar Saída</h1>
+        <p className="text-sm text-muted-foreground">
+          Selecione a entrada ativa para registrar a saída
+        </p>
       </div>
 
-      {/* Stat Cards */}
-      <div className="mb-8 grid gap-4 sm:grid-cols-3">
-        {statCards.map((s) => (
-          <Card key={s.label} className="animate-fade-in">
-            <CardContent className="flex items-center gap-4 p-5">
-              <div className={`rounded-lg bg-muted p-3 ${s.color}`}>
-                <s.icon className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">{s.label}</p>
-                <p className="text-2xl font-bold text-foreground">
-                  {statsLoading ? "–" : s.value}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Active Entries */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Clock className="h-5 w-5 text-warning" />
-            Ativos Agora
-          </CardTitle>
+      <Card className="max-w-3xl animate-fade-in">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-lg">Entradas Ativas</CardTitle>
+          <div className="mt-2">
+            <Label htmlFor="search" className="sr-only">Buscar</Label>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                id="search"
+                placeholder="Buscar por nome, placa, destino..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
-          {activeLoading ? (
+          {isLoading ? (
             <p className="text-sm text-muted-foreground">Carregando...</p>
-          ) : !active?.length ? (
+          ) : !filtered.length ? (
             <p className="py-8 text-center text-sm text-muted-foreground">
-              Nenhuma entrada ativa no momento.
+              {search ? "Nenhuma entrada encontrada para esta busca." : "Nenhuma entrada ativa no momento."}
             </p>
           ) : (
             <div className="space-y-2">
-              {active.map((log) => (
+              {filtered.map((log) => (
                 <div
                   key={log.id}
                   className="flex flex-col gap-2 rounded-lg border border-border bg-background p-4 sm:flex-row sm:items-center sm:justify-between animate-fade-in"
@@ -150,7 +119,7 @@ const Dashboard = () => {
                         size="sm"
                         className="gap-1 border-success text-success hover:bg-success hover:text-success-foreground"
                       >
-                        <LogOutIcon className="h-3.5 w-3.5" />
+                        <Check className="h-3.5 w-3.5" />
                         Dar Saída
                       </Button>
                     </AlertDialogTrigger>
@@ -180,4 +149,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default NewExit;
