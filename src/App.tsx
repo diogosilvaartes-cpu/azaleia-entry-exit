@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import NewEntry from "./pages/NewEntry";
 import NewExit from "./pages/NewExit";
 import HistoryPage from "./pages/HistoryPage";
+import ResidentsPage from "./pages/ResidentsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/new" element={<ProtectedRoute><NewEntry /></ProtectedRoute>} />
             <Route path="/exit" element={<ProtectedRoute><NewExit /></ProtectedRoute>} />
             <Route path="/history" element={<ProtectedRoute><HistoryPage /></ProtectedRoute>} />
+            <Route path="/residents" element={<ProtectedRoute><ResidentsPage /></ProtectedRoute>} />
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
