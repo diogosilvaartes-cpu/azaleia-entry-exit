@@ -6,7 +6,7 @@ export interface AccessLog {
   driver_name: string;
   identity_number: string | null;
   destination: string;
-  authorized_by: string;
+  authorized_by: string | null;
   notes: string | null;
   car_model: string | null;
   car_color: string | null;
@@ -20,7 +20,7 @@ export interface AccessLogInsert {
   driver_name: string;
   identity_number?: string;
   destination: string;
-  authorized_by: string;
+  authorized_by?: string;
   notes?: string;
   car_model?: string;
   car_color?: string;

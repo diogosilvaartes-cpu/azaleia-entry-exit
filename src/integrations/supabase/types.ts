@@ -16,7 +16,7 @@ export type Database = {
     Tables: {
       access_logs: {
         Row: {
-          authorized_by: string
+          authorized_by: string | null
           car_color: string | null
           car_model: string | null
           created_at: string
@@ -32,7 +32,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          authorized_by: string
+          authorized_by?: string | null
           car_color?: string | null
           car_model?: string | null
           created_at?: string
@@ -48,7 +48,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          authorized_by?: string
+          authorized_by?: string | null
           car_color?: string | null
           car_model?: string | null
           created_at?: string

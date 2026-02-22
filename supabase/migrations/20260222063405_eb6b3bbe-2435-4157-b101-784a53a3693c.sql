@@ -1,0 +1,1 @@
+ALTER TABLE public.access_logs ALTER COLUMN authorized_by DROP NOT NULL;

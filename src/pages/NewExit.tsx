@@ -105,7 +105,7 @@ const NewExit = () => {
         car_model: form.car_model || undefined,
         car_color: form.car_color || undefined,
         destination: form.destination,
-        authorized_by: form.authorized_by,
+        authorized_by: form.authorized_by || undefined,
         notes: form.notes || undefined,
       });
       toast({ title: "Saída avulsa registrada com sucesso!" });
@@ -281,13 +281,12 @@ const NewExit = () => {
                     />
                   </div>
                   <div className="sm:col-span-2 space-y-2">
-                    <Label htmlFor="exit_authorized_by">Liberado por *</Label>
+                    <Label htmlFor="exit_authorized_by">Liberado por</Label>
                     <Input
                       id="exit_authorized_by"
                       placeholder="Nome de quem autorizou"
                       value={form.authorized_by}
                       onChange={(e) => update("authorized_by", e.target.value)}
-                      required
                     />
                   </div>
                 </div>

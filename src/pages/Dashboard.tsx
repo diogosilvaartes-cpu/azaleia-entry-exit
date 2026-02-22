@@ -140,7 +140,7 @@ const Dashboard = () => {
                       <Badge variant="secondary">{log.destination}</Badge>
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      Entrada: {formatTime(log.entry_time)} · Liberado por: {log.authorized_by}
+                      Entrada: {formatTime(log.entry_time)}{log.authorized_by ? ` · Liberado por: ${log.authorized_by}` : ""}
                     </p>
                   </div>
 

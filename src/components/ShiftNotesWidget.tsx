@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { MessageSquare, Send } from "lucide-react";
+import { MessageSquare, Send, BookOpen } from "lucide-react";
 import { useTodayShiftNotes, useCreateShiftNote } from "@/hooks/useShiftNotes";
 import { useToast } from "@/hooks/use-toast";
 
@@ -27,13 +28,28 @@ const ShiftNotesWidget = () => {
   const formatTime = (iso: string) =>
     new Date(iso).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
+  const colors = [
+    "border-l-4 border-l-yellow-500 bg-yellow-50 dark:bg-yellow-950/30",
+    "border-l-4 border-l-blue-500 bg-blue-50 dark:bg-blue-950/30",
+    "border-l-4 border-l-green-500 bg-green-50 dark:bg-green-950/30",
+    "border-l-4 border-l-orange-500 bg-orange-50 dark:bg-orange-950/30",
+    "border-l-4 border-l-purple-500 bg-purple-50 dark:bg-purple-950/30",
+  ];
+
   return (
     <Card>
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <MessageSquare className="h-5 w-5 text-primary" />
-          Observações do Turno
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <MessageSquare className="h-5 w-5 text-primary" />
+            Observações do Turno
+          </CardTitle>
+          <Link to="/occurrences">
+            <Button variant="ghost" size="sm" className="gap-1 text-xs">
+              <BookOpen className="h-3.5 w-3.5" /> Ver Livro
+            </Button>
+          </Link>
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <form onSubmit={handleSubmit} className="flex gap-2">
@@ -62,12 +78,12 @@ const ShiftNotesWidget = () => {
           </p>
         ) : (
           <div className="space-y-2 max-h-64 overflow-y-auto">
-            {notes.map((note) => (
+            {notes.map((note, i) => (
               <div
                 key={note.id}
-                className="rounded-lg border border-border bg-muted/50 p-3 animate-fade-in"
+                className={`rounded-lg p-3 animate-fade-in ${colors[i % colors.length]}`}
               >
-                <p className="text-sm text-foreground whitespace-pre-wrap">{note.content}</p>
+                <p className="text-sm text-foreground whitespace-pre-wrap font-medium">{note.content}</p>
                 <p className="text-xs text-muted-foreground mt-1">{formatTime(note.created_at)}</p>
               </div>
             ))}

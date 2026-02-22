@@ -87,7 +87,7 @@ const NewEntry = () => {
         driver_name: form.driver_name,
         identity_number: form.identity_number || undefined,
         destination: form.destination,
-        authorized_by: form.authorized_by,
+        authorized_by: form.authorized_by || undefined,
         notes: form.notes || undefined,
         car_model: form.car_model || undefined,
         car_color: form.car_color || undefined,
@@ -186,14 +186,13 @@ const NewEntry = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="authorized_by">Liberado por *</Label>
+                <Label htmlFor="authorized_by">Liberado por</Label>
                 <AutocompleteInput
                   id="authorized_by"
                   placeholder="Nome de quem autorizou"
                   value={form.authorized_by}
                   onChange={(v) => update("authorized_by", v)}
                   suggestions={authorizers}
-                  required
                 />
               </div>
             </div>
