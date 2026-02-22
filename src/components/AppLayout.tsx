@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Shield, LayoutDashboard, PlusCircle, History, LogOut, Users } from "lucide-react";
+import logoFlor from "@/assets/logo_azaleia_flor.png";
 
 const navItems = [
   { to: "/dashboard", label: "Painel", icon: LayoutDashboard },
@@ -16,13 +17,20 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background">
+      {/* Subtle leaf texture overlay */}
+      <div 
+        className="pointer-events-none fixed inset-0 z-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `url(${logoFlor})`,
+          backgroundSize: '120px',
+          backgroundRepeat: 'repeat',
+        }}
+      />
       <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur-sm no-print">
         <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-              <Shield className="h-4 w-4 text-primary-foreground" />
-            </div>
+            <img src={logoFlor} alt="Azaléia" className="h-8 w-8" />
             <span className="hidden font-semibold text-foreground sm:inline">
               Residencial Azaleia
             </span>
@@ -54,7 +62,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-4 py-6">{children}</main>
+      <main className="relative z-10 mx-auto max-w-7xl px-4 py-6">{children}</main>
     </div>
   );
 };

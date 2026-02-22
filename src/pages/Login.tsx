@@ -9,6 +9,7 @@ import { LogIn } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import loginBg from "@/assets/login-bg.jpg";
 import logoAzaleia from "@/assets/logo_azaleia.png";
+import logoFlor from "@/assets/logo_azaleia_flor.png";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -59,12 +60,17 @@ const Login = () => {
       />
       <div className="absolute inset-0 z-0 bg-foreground/40" />
 
-      <div className="relative z-10 w-full max-w-md animate-fade-in rounded-2xl bg-black/50 backdrop-blur-sm p-6">
-        <div className="mb-8 text-center">
+      <div className="relative z-10 w-full max-w-md animate-fade-in rounded-2xl bg-black/50 backdrop-blur-md p-6">
+        <div className="mb-6 text-center">
+          <img 
+            src={logoFlor} 
+            alt="Azaléia" 
+            className="mx-auto mb-3 h-20 w-auto drop-shadow-lg"
+          />
           <img 
             src={logoAzaleia} 
             alt="Residencial Azaléia" 
-            className="mx-auto mb-4 h-42 w-auto drop-shadow-lg"
+            className="mx-auto mb-3 h-36 w-auto drop-shadow-lg"
           />
           <p className="text-sm text-primary-foreground/80 drop-shadow">Controle de Entrada e Saída</p>
         </div>
