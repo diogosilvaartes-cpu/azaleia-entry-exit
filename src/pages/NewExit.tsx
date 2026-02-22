@@ -169,7 +169,7 @@ const NewExit = () => {
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="font-medium text-foreground">{log.driver_name}</span>
                           {log.plate && (
-                            <Badge className="bg-accent/15 text-accent border-accent/30 font-mono text-sm font-bold tracking-wider">
+                            <Badge variant="outline" className="font-mono text-xs">
                               {log.plate}
                             </Badge>
                           )}
@@ -185,8 +185,9 @@ const NewExit = () => {
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button
+                            variant="outline"
                             size="sm"
-                            className="gap-1 bg-accent text-accent-foreground hover:bg-accent/90 shadow-sm"
+                            className="gap-1 border-success text-success hover:bg-success hover:text-success-foreground"
                           >
                             <Check className="h-3.5 w-3.5" />
                             Dar Saída
@@ -300,7 +301,7 @@ const NewExit = () => {
                   />
                 </div>
                 <div className="flex justify-end pt-2">
-                  <Button type="submit" disabled={standaloneExit.isPending} className="gap-2 bg-accent text-accent-foreground hover:bg-accent/90 shadow-md">
+                  <Button type="submit" disabled={standaloneExit.isPending} className="gap-2">
                     <Save className="h-4 w-4" />
                     {standaloneExit.isPending ? "Salvando..." : "Registrar Saída Avulsa"}
                   </Button>

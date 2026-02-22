@@ -207,7 +207,7 @@ const NewEntry = () => {
               />
             </div>
             <div className="flex justify-end pt-2">
-              <Button type="submit" disabled={createEntry.isPending} className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90 shadow-md">
+              <Button type="submit" disabled={createEntry.isPending} className="gap-2">
                 <Save className="h-4 w-4" />
                 {createEntry.isPending ? "Salvando..." : "Registrar Entrada"}
               </Button>

@@ -118,7 +118,7 @@ const ResidentsPage = () => {
           </p>
         </div>
         {!showForm && (
-          <Button onClick={() => setShowForm(true)} className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90 shadow-md">
+          <Button onClick={() => setShowForm(true)} className="gap-2">
             <Plus className="h-4 w-4" /> Novo Cadastro
           </Button>
         )}
@@ -272,7 +272,7 @@ const ResidentsPage = () => {
                       </Badge>
                       {r.unit && <Badge variant="outline">{r.unit}</Badge>}
                       {r.plate && (
-                        <Badge className="bg-accent/15 text-accent border-accent/30 font-mono text-sm font-bold tracking-wider">
+                        <Badge variant="outline" className="font-mono text-xs">
                           {r.plate}
                         </Badge>
                       )}

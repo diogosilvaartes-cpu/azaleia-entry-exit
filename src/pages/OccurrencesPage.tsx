@@ -71,7 +71,7 @@ const OccurrencesPage = () => {
               type="submit"
               size="sm"
               disabled={createNote.isPending || !content.trim()}
-              className="self-end gap-1 bg-primary text-primary-foreground hover:bg-primary/90 shadow-md"
+              className="self-end gap-1"
             >
               <Send className="h-4 w-4" /> Registrar
             </Button>
