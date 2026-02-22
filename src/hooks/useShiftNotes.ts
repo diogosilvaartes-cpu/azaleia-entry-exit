@@ -19,6 +19,20 @@ export function useTodayShiftNotes() {
   });
 }
 
+export function useAllShiftNotes() {
+  return useQuery({
+    queryKey: ["shift_notes", "all"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("shift_notes")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data as ShiftNote[];
+    },
+  });
+}
+
 export function useCreateShiftNote() {
   const { user } = useAuth();
   const queryClient = useQueryClient();

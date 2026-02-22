@@ -2,13 +2,14 @@ import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Shield, LayoutDashboard, PlusCircle, History, LogOut, Users } from "lucide-react";
+import { LayoutDashboard, PlusCircle, History, LogOut, Users, BookOpen } from "lucide-react";
 import logoFlor from "@/assets/logo_azaleia_flor.png";
 
 const navItems = [
   { to: "/dashboard", label: "Painel", icon: LayoutDashboard },
   { to: "/new", label: "Nova Entrada", icon: PlusCircle },
   { to: "/history", label: "Histórico", icon: History },
+  { to: "/occurrences", label: "Ocorrências", icon: BookOpen },
   { to: "/residents", label: "Cadastros", icon: Users },
 ];
 
