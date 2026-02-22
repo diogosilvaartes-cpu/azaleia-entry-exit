@@ -64,7 +64,7 @@ const Login = () => {
           <img 
             src={logoAzaleia} 
             alt="Residencial Azaléia" 
-            className="mx-auto mb-4 h-28 w-auto drop-shadow-lg"
+            className="mx-auto mb-4 h-42 w-auto drop-shadow-lg"
           />
           <p className="text-sm text-primary-foreground/80 drop-shadow">Controle de Entrada e Saída</p>
         </div>
