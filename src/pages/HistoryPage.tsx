@@ -142,7 +142,7 @@ const HistoryPage = () => {
                       <TableCell className="text-xs">{fmt(log.entry_time, "time")}</TableCell>
                       <TableCell>
                         {log.plate ? (
-                          <Badge className="bg-primary text-primary-foreground font-mono text-sm font-bold tracking-wider">
+                          <Badge className="bg-accent text-accent-foreground font-mono text-sm font-bold tracking-wider shadow-sm">
                             {log.plate}
                           </Badge>
                         ) : (

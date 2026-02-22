@@ -28,7 +28,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
           backgroundRepeat: 'repeat',
         }}
       />
-      <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur-sm no-print">
+      <header className="sticky top-0 z-40 border-b-2 border-primary/20 bg-card/95 backdrop-blur-sm no-print shadow-sm">
         <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
           <div className="flex items-center gap-3">
             <img src={logoFlor} alt="Azaléia" className="h-8 w-8" />
