@@ -77,6 +77,30 @@ export function useCreateEntry() {
   });
 }
 
+export function useCreateStandaloneExit() {
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (entry: Omit<AccessLogInsert, "created_by">) => {
+      if (!user) throw new Error("Usuário não autenticado");
+      const now = new Date().toISOString();
+      const { error } = await supabase
+        .from("access_logs")
+        .insert({
+          ...entry,
+          created_by: user.id,
+          entry_time: now,
+          exit_time: now,
+        });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["access_logs"] });
+    },
+  });
+}
+
 export function useHistoryLogs(filters: {
   dateFrom?: string;
   dateTo?: string;

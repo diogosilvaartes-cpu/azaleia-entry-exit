@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { PlusCircle, LogIn, LogOut as LogOutIcon, Users, Clock } from "lucide-react";
 import { useActiveEntries, useTodayStats, useRegisterExit } from "@/hooks/useAccessLogs";
 import { useToast } from "@/hooks/use-toast";
+import ShiftNotesWidget from "@/components/ShiftNotesWidget";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -176,6 +177,10 @@ const Dashboard = () => {
           )}
         </CardContent>
       </Card>
+      {/* Shift Notes */}
+      <div className="mt-6">
+        <ShiftNotesWidget />
+      </div>
     </AppLayout>
   );
 };

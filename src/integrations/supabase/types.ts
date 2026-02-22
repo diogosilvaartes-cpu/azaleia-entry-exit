@@ -17,6 +17,8 @@ export type Database = {
       access_logs: {
         Row: {
           authorized_by: string
+          car_color: string | null
+          car_model: string | null
           created_at: string
           created_by: string
           destination: string
@@ -31,6 +33,8 @@ export type Database = {
         }
         Insert: {
           authorized_by: string
+          car_color?: string | null
+          car_model?: string | null
           created_at?: string
           created_by: string
           destination: string
@@ -45,6 +49,8 @@ export type Database = {
         }
         Update: {
           authorized_by?: string
+          car_color?: string | null
+          car_model?: string | null
           created_at?: string
           created_by?: string
           destination?: string
@@ -56,6 +62,72 @@ export type Database = {
           notes?: string | null
           plate?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      residents: {
+        Row: {
+          car_color: string | null
+          car_model: string | null
+          created_at: string
+          id: string
+          name: string
+          notes: string | null
+          phone: string | null
+          plate: string | null
+          type: string
+          unit: string | null
+          updated_at: string
+        }
+        Insert: {
+          car_color?: string | null
+          car_model?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          notes?: string | null
+          phone?: string | null
+          plate?: string | null
+          type?: string
+          unit?: string | null
+          updated_at?: string
+        }
+        Update: {
+          car_color?: string | null
+          car_model?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          plate?: string | null
+          type?: string
+          unit?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      shift_notes: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string
+          id: string
+          shift_date: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          created_by: string
+          id?: string
+          shift_date?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          shift_date?: string
         }
         Relationships: []
       }
