@@ -28,12 +28,12 @@ const Login = () => {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: window.location.origin },
+          options: { emailRedirectTo: window.location.origin }
         });
         if (error) throw error;
         toast({
           title: "Conta criada",
-          description: "Verifique seu e-mail para confirmar o cadastro.",
+          description: "Verifique seu e-mail para confirmar o cadastro."
         });
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -44,7 +44,7 @@ const Login = () => {
       toast({
         title: "Erro",
         description: error.message,
-        variant: "destructive",
+        variant: "destructive"
       });
     } finally {
       setLoading(false);
@@ -54,24 +54,24 @@ const Login = () => {
   return (
     <div className="relative flex min-h-screen items-center justify-center p-4 overflow-hidden">
       {/* Background Image with Overlay */}
-      <div 
+      <div
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 hover:scale-105"
-        style={{ backgroundImage: `url(${loginBg})` }}
-      />
+        style={{ backgroundImage: `url(${loginBg})` }} />
+
       <div className="absolute inset-0 z-0 bg-foreground/40" />
 
       <div className="relative z-10 w-full max-w-md animate-fade-in rounded-2xl bg-black/50 backdrop-blur-md p-6">
         <div className="mb-6 text-center">
-          <img 
-            src={logoFlor} 
-            alt="Azaléia" 
-            className="mx-auto mb-3 h-20 w-auto drop-shadow-lg"
-          />
-          <img 
-            src={logoAzaleia} 
-            alt="Residencial Azaléia" 
-            className="mx-auto mb-3 h-36 w-auto drop-shadow-lg"
-          />
+          
+
+
+
+
+          <img
+            src={logoAzaleia}
+            alt="Residencial Azaléia"
+            className="mx-auto mb-3 h-36 w-auto drop-shadow-lg" />
+
           <p className="text-sm text-primary-foreground/80 drop-shadow">Controle de Entrada e Saída</p>
         </div>
 
@@ -79,9 +79,9 @@ const Login = () => {
           <CardHeader className="pb-4">
             <CardTitle className="text-lg">{isSignUp ? "Criar Conta" : "Entrar"}</CardTitle>
             <CardDescription>
-              {isSignUp
-                ? "Crie sua conta para acessar o sistema"
-                : "Acesse com suas credenciais"}
+              {isSignUp ?
+              "Crie sua conta para acessar o sistema" :
+              "Acesse com suas credenciais"}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -94,8 +94,8 @@ const Login = () => {
                   placeholder="porteiro@azaleia.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
+                  required />
+
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Senha</Label>
@@ -106,8 +106,8 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  minLength={6}
-                />
+                  minLength={6} />
+
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
                 <LogIn className="mr-2 h-4 w-4" />
@@ -118,16 +118,16 @@ const Login = () => {
               <button
                 type="button"
                 className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                onClick={() => setIsSignUp(!isSignUp)}
-              >
+                onClick={() => setIsSignUp(!isSignUp)}>
+
                 {isSignUp ? "Já tem conta? Entrar" : "Não tem conta? Criar conta"}
               </button>
             </div>
           </CardContent>
         </Card>
       </div>
-    </div>
-  );
+    </div>);
+
 };
 
 export default Login;
