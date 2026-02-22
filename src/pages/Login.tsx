@@ -59,7 +59,7 @@ const Login = () => {
       />
       <div className="absolute inset-0 z-0 bg-foreground/40" />
 
-      <div className="relative z-10 w-full max-w-md animate-fade-in">
+      <div className="relative z-10 w-full max-w-md animate-fade-in rounded-2xl bg-black/50 backdrop-blur-sm p-6">
         <div className="mb-8 text-center">
           <img 
             src={logoAzaleia} 
