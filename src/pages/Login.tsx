@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Shield, LogIn } from "lucide-react";
+import { LogIn } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import loginBg from "@/assets/login-bg.jpg";
+import logoAzaleia from "@/assets/logo_azaleia.png";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -56,15 +57,16 @@ const Login = () => {
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 hover:scale-105"
         style={{ backgroundImage: `url(${loginBg})` }}
       />
-      <div className="absolute inset-0 z-0 bg-background/60 backdrop-blur-[2px]" />
+      <div className="absolute inset-0 z-0 bg-foreground/40" />
 
       <div className="relative z-10 w-full max-w-md animate-fade-in">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary">
-            <Shield className="h-8 w-8 text-primary-foreground" />
-          </div>
-          <h1 className="text-2xl font-bold text-foreground">Residencial Azaleia</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Controle de Entrada e Saída</p>
+          <img 
+            src={logoAzaleia} 
+            alt="Residencial Azaléia" 
+            className="mx-auto mb-4 h-28 w-auto drop-shadow-lg"
+          />
+          <p className="text-sm text-primary-foreground/80 drop-shadow">Controle de Entrada e Saída</p>
         </div>
 
         <Card>
