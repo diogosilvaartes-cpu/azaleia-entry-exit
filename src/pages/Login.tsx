@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Shield, LogIn } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import loginBg from "@/assets/login-bg.jpg";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -49,8 +50,15 @@ const Login = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <div className="w-full max-w-md animate-fade-in">
+    <div className="relative flex min-h-screen items-center justify-center p-4 overflow-hidden">
+      {/* Background Image with Overlay */}
+      <div 
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 hover:scale-105"
+        style={{ backgroundImage: `url(${loginBg})` }}
+      />
+      <div className="absolute inset-0 z-0 bg-background/60 backdrop-blur-[2px]" />
+
+      <div className="relative z-10 w-full max-w-md animate-fade-in">
         <div className="mb-8 text-center">
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary">
             <Shield className="h-8 w-8 text-primary-foreground" />
