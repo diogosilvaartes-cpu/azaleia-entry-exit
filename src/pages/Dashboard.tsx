@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import AppLayout from "@/components/AppLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, LogIn, LogOut as LogOutIcon, Users, Clock } from "lucide-react";
@@ -37,74 +38,54 @@ const Dashboard = () => {
     }
   };
 
-  const statCards = [
-    {
-      label: "Entradas Hoje",
-      value: stats?.entries ?? 0,
-      icon: LogIn,
-      color: "text-primary",
-    },
-    {
-      label: "Saídas Hoje",
-      value: stats?.exits ?? 0,
-      icon: LogOutIcon,
-      color: "text-success",
-    },
-    {
-      label: "Ativos Agora",
-      value: stats?.active ?? 0,
-      icon: Users,
-      color: "text-warning",
-    },
-  ];
 
   return (
     <AppLayout>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Painel</h1>
-          <p className="text-sm text-muted-foreground">
-            {new Date().toLocaleDateString("pt-BR", {
-              weekday: "long",
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })}
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Link to="/new">
-            <Button className="gap-2">
-              <PlusCircle className="h-4 w-4" />
-              Nova Entrada
-            </Button>
-          </Link>
-          <Link to="/exit">
-            <Button variant="outline" className="gap-2 border-success text-success hover:bg-success hover:text-success-foreground">
-              <LogOutIcon className="h-4 w-4" />
-              Nova Saída
-            </Button>
-          </Link>
-        </div>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-foreground">Painel</h1>
+        <p className="text-sm text-muted-foreground">
+          {new Date().toLocaleDateString("pt-BR", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          })}
+        </p>
       </div>
 
-      {/* Stat Cards */}
-      <div className="mb-8 grid gap-4 sm:grid-cols-3">
-        {statCards.map((s) => (
-          <Card key={s.label} className="animate-fade-in">
-            <CardContent className="flex items-center gap-4 p-5">
-              <div className={`rounded-lg bg-muted p-3 ${s.color}`}>
-                <s.icon className="h-5 w-5" />
+      {/* Action Buttons + Active Now */}
+      <div className="mb-6 grid gap-4 sm:grid-cols-3">
+        <Link to="/new" className="block">
+          <Card className="h-full cursor-pointer border-primary/30 transition-colors hover:border-primary hover:bg-primary/5 animate-fade-in">
+            <CardContent className="flex flex-col items-center justify-center gap-3 p-6">
+              <div className="rounded-lg bg-primary/10 p-4 text-primary">
+                <PlusCircle className="h-7 w-7" />
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground">{s.label}</p>
-                <p className="text-2xl font-bold text-foreground">
-                  {statsLoading ? "–" : s.value}
-                </p>
-              </div>
+              <span className="text-lg font-semibold text-foreground">Nova Entrada</span>
             </CardContent>
           </Card>
-        ))}
+        </Link>
+        <Link to="/exit" className="block">
+          <Card className="h-full cursor-pointer border-success/30 transition-colors hover:border-success hover:bg-success/5 animate-fade-in">
+            <CardContent className="flex flex-col items-center justify-center gap-3 p-6">
+              <div className="rounded-lg bg-success/10 p-4 text-success">
+                <LogOutIcon className="h-7 w-7" />
+              </div>
+              <span className="text-lg font-semibold text-foreground">Nova Saída</span>
+            </CardContent>
+          </Card>
+        </Link>
+        <Card className="animate-fade-in">
+          <CardContent className="flex flex-col items-center justify-center gap-3 p-6">
+            <div className="rounded-lg bg-warning/10 p-4 text-warning">
+              <Users className="h-7 w-7" />
+            </div>
+            <span className="text-lg font-semibold text-foreground">
+              {statsLoading ? "–" : stats?.active ?? 0}
+            </span>
+            <span className="text-sm text-muted-foreground">Ativos Agora</span>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Active Entries */}
@@ -133,7 +114,7 @@ const Dashboard = () => {
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="font-medium text-foreground">{log.driver_name}</span>
                       {log.plate && (
-                        <Badge variant="outline" className="font-mono text-xs">
+                        <Badge className="bg-warning/15 text-warning border-warning/30 font-mono text-sm font-bold tracking-wider">
                           {log.plate}
                         </Badge>
                       )}
@@ -180,6 +161,36 @@ const Dashboard = () => {
       {/* Shift Notes */}
       <div className="mt-6">
         <ShiftNotesWidget />
+      </div>
+
+      {/* Stats summary at the bottom */}
+      <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        <Card className="animate-fade-in">
+          <CardContent className="flex items-center gap-4 p-5">
+            <div className="rounded-lg bg-primary/10 p-3 text-primary">
+              <LogIn className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Entradas Hoje</p>
+              <p className="text-2xl font-bold text-foreground">
+                {statsLoading ? "–" : stats?.entries ?? 0}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="animate-fade-in">
+          <CardContent className="flex items-center gap-4 p-5">
+            <div className="rounded-lg bg-success/10 p-3 text-success">
+              <LogOutIcon className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Saídas Hoje</p>
+              <p className="text-2xl font-bold text-foreground">
+                {statsLoading ? "–" : stats?.exits ?? 0}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </AppLayout>
   );
