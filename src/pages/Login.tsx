@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { LogIn } from "lucide-react";
+import { LogIn, UserRound } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import loginBg from "@/assets/login-bg.jpg";
 import logoAzaleia from "@/assets/logo_azaleia.png";
@@ -114,12 +114,41 @@ const Login = () => {
                 {loading ? "Aguarde..." : isSignUp ? "Criar Conta" : "Entrar"}
               </Button>
             </form>
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-2 text-muted-foreground">ou</span>
+              </div>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="lg"
+              className="w-full text-base font-semibold border-2 border-primary/50 hover:bg-primary/10"
+              disabled={loading}
+              onClick={async () => {
+                setLoading(true);
+                try {
+                  const { error } = await supabase.auth.signInAnonymously();
+                  if (error) throw error;
+                  navigate("/dashboard");
+                } catch (error: any) {
+                  toast({ title: "Erro", description: error.message, variant: "destructive" });
+                } finally {
+                  setLoading(false);
+                }
+              }}
+            >
+              <UserRound className="mr-2 h-5 w-5" />
+              Entrar sem E-mail
+            </Button>
             <div className="mt-4 text-center">
               <button
                 type="button"
                 className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 onClick={() => setIsSignUp(!isSignUp)}>
-
                 {isSignUp ? "Já tem conta? Entrar" : "Não tem conta? Criar conta"}
               </button>
             </div>
