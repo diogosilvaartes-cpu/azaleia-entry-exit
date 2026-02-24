@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import ResidentSheet from "@/components/ResidentSheet";
 import AppLayout from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,6 +35,8 @@ const ResidentsPage = () => {
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState<"" | "morador" | "visitante">("");
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [selectedResident, setSelectedResident] = useState<Resident | null>(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
   const [uploadingCarPhoto, setUploadingCarPhoto] = useState(false);
   const photoInputRef = useRef<HTMLInputElement>(null);
   const carPhotoInputRef = useRef<HTMLInputElement>(null);
@@ -249,7 +252,7 @@ const ResidentsPage = () => {
       ) : (
         <div className="space-y-3">
           {filtered.map((r) => (
-            <div key={r.id} className="apple-card p-4 flex items-center gap-4 animate-fade-in">
+            <div key={r.id} className="apple-card p-4 flex items-center gap-4 animate-fade-in cursor-pointer hover:shadow-md active:scale-[0.99] transition-all" onClick={() => { setSelectedResident(r); setSheetOpen(true); }}>
               {/* Avatar */}
               <div className="shrink-0">
                 {r.photo_url ? (
@@ -316,6 +319,13 @@ const ResidentsPage = () => {
           ))}
         </div>
       )}
+
+      {/* Resident detail sheet */}
+      <ResidentSheet
+        resident={selectedResident}
+        open={sheetOpen}
+        onOpenChange={setSheetOpen}
+      />
     </AppLayout>
   );
 };
