@@ -6,82 +6,82 @@
 
 @layer base {
   :root {
-    --background: 210 20% 98%;
-    --foreground: 215 25% 15%;
+    --background: 240 5% 96%;
+    --foreground: 0 0% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 15%;
+    --card-foreground: 0 0% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
+    --popover-foreground: 0 0% 11%;
 
-    --primary: 215 80% 42%;
+    --primary: 211 100% 50%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 20% 94%;
-    --secondary-foreground: 215 25% 15%;
+    --secondary: 240 5% 93%;
+    --secondary-foreground: 0 0% 11%;
 
-    --muted: 210 15% 93%;
-    --muted-foreground: 215 12% 50%;
+    --muted: 240 5% 93%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 160 60% 40%;
+    --accent: 145 65% 42%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 20% 88%;
-    --input: 214 20% 88%;
-    --ring: 215 80% 42%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 211 100% 50%;
 
-    --radius: 0.5rem;
+    --radius: 1rem;
 
-    --sidebar-background: 215 30% 18%;
-    --sidebar-foreground: 210 20% 90%;
-    --sidebar-primary: 215 80% 55%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 11%;
+    --sidebar-primary: 211 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 215 25% 25%;
-    --sidebar-accent-foreground: 210 20% 90%;
-    --sidebar-border: 215 20% 25%;
-    --sidebar-ring: 215 80% 55%;
+    --sidebar-accent: 240 5% 96%;
+    --sidebar-accent-foreground: 0 0% 11%;
+    --sidebar-border: 240 6% 90%;
+    --sidebar-ring: 211 100% 50%;
 
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
-    --success: 160 60% 40%;
+    --success: 145 65% 42%;
     --success-foreground: 0 0% 100%;
   }
 
   .dark {
-    --background: 215 30% 10%;
-    --foreground: 210 20% 90%;
-    --card: 215 28% 14%;
-    --card-foreground: 210 20% 90%;
-    --popover: 215 28% 14%;
-    --popover-foreground: 210 20% 90%;
-    --primary: 215 80% 55%;
+    --background: 0 0% 7%;
+    --foreground: 0 0% 93%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 93%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 93%;
+    --primary: 211 100% 50%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 215 20% 20%;
-    --secondary-foreground: 210 20% 90%;
-    --muted: 215 18% 20%;
-    --muted-foreground: 215 12% 55%;
-    --accent: 160 60% 45%;
+    --secondary: 0 0% 18%;
+    --secondary-foreground: 0 0% 93%;
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 145 65% 45%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62% 30%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 215 20% 22%;
-    --input: 215 20% 22%;
-    --ring: 215 80% 55%;
-    --sidebar-background: 215 30% 8%;
-    --sidebar-foreground: 210 20% 85%;
-    --sidebar-primary: 215 80% 55%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 211 100% 50%;
+    --sidebar-background: 0 0% 8%;
+    --sidebar-foreground: 0 0% 85%;
+    --sidebar-primary: 211 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 215 25% 15%;
-    --sidebar-accent-foreground: 210 20% 85%;
-    --sidebar-border: 215 20% 15%;
-    --sidebar-ring: 215 80% 55%;
+    --sidebar-accent: 0 0% 15%;
+    --sidebar-accent-foreground: 0 0% 85%;
+    --sidebar-border: 0 0% 15%;
+    --sidebar-ring: 211 100% 50%;
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
-    --success: 160 60% 45%;
+    --success: 145 65% 45%;
     --success-foreground: 0 0% 100%;
   }
 }
@@ -93,13 +93,28 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
 }
 
-@layer utilities {
-  .glass-card {
-    @apply bg-card/80 backdrop-blur-sm border border-border/60 shadow-sm;
+@layer components {
+  /* Brazilian license plate style */
+  .plate-badge {
+    @apply inline-flex items-center gap-2 rounded-xl border-2 border-foreground/80 bg-card px-4 py-2 font-mono text-2xl font-bold tracking-[0.15em];
+  }
+
+  .plate-badge-sm {
+    @apply inline-flex items-center gap-1.5 rounded-lg border-2 border-foreground/70 bg-card px-3 py-1 font-mono text-base font-bold tracking-[0.12em];
+  }
+
+  .plate-badge-lg {
+    @apply inline-flex items-center gap-2 rounded-xl border-2 border-foreground/80 bg-card px-6 py-3 font-mono text-3xl font-bold tracking-[0.18em];
+  }
+
+  /* Apple-style card */
+  .apple-card {
+    @apply bg-card rounded-2xl shadow-sm border-0;
   }
 }
 
