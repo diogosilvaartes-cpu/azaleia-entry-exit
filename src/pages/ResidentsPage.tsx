@@ -111,7 +111,7 @@ const ResidentsPage = () => {
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-extrabold text-foreground tracking-tight">Cadastros</h1>
         {!showForm && (
-          <Button onClick={() => setShowForm(true)} className="gap-2 rounded-full px-5 font-bold">
+          <Button onClick={() => setShowForm(true)} className="gap-2 rounded-full px-5 font-extrabold shadow-md">
             <Plus className="h-4 w-4" /> Novo
           </Button>
         )}
@@ -119,50 +119,48 @@ const ResidentsPage = () => {
 
       {/* Form */}
       {showForm && (
-        <div className="apple-card p-6 mb-6 max-w-2xl animate-fade-in">
-          <h2 className="text-lg font-bold mb-4">{editingId ? "Editar Cadastro" : "Novo Cadastro"}</h2>
+        <div className="apple-card p-6 mb-6 max-w-2xl animate-fade-in border-l-4 border-l-primary">
+          <h2 className="text-lg font-extrabold mb-4">{editingId ? "Editar Cadastro" : "Novo Cadastro"}</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Photo uploads */}
             <div className="flex gap-4 mb-2">
-              {/* Person photo */}
               <div className="text-center">
-                <Label className="text-xs font-bold text-muted-foreground mb-1 block">Foto Morador</Label>
+                <Label className="text-xs font-extrabold text-foreground/70 mb-1 block uppercase tracking-wider">Foto Morador</Label>
                 <button
                   type="button"
                   onClick={() => photoInputRef.current?.click()}
                   disabled={uploadingPhoto}
-                  className="h-28 w-28 rounded-2xl border-2 border-dashed border-primary/40 bg-primary/5 flex flex-col items-center justify-center gap-1 hover:border-primary hover:bg-primary/10 transition-all overflow-hidden"
+                  className="h-28 w-28 rounded-2xl border-2 border-dashed border-primary/50 bg-primary/5 flex flex-col items-center justify-center gap-1 hover:border-primary hover:bg-primary/10 transition-all overflow-hidden"
                 >
                   {form.photo_url ? (
                     <img src={form.photo_url} alt="Foto" className="h-full w-full object-cover" />
                   ) : uploadingPhoto ? (
-                    <span className="text-xs text-muted-foreground">Enviando...</span>
+                    <span className="text-xs font-bold text-muted-foreground">Enviando...</span>
                   ) : (
                     <>
-                      <Camera className="h-6 w-6 text-primary/60" />
-                      <span className="text-[10px] text-primary/60 font-medium">Adicionar</span>
+                      <Camera className="h-7 w-7 text-primary/70" />
+                      <span className="text-[10px] text-primary/70 font-bold">Adicionar</span>
                     </>
                   )}
                 </button>
                 <input ref={photoInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && uploadPhoto(e.target.files[0], "photo")} />
               </div>
-              {/* Car photo */}
               <div className="text-center">
-                <Label className="text-xs font-bold text-muted-foreground mb-1 block">Foto Veículo</Label>
+                <Label className="text-xs font-extrabold text-foreground/70 mb-1 block uppercase tracking-wider">Foto Veículo</Label>
                 <button
                   type="button"
                   onClick={() => carPhotoInputRef.current?.click()}
                   disabled={uploadingCarPhoto}
-                  className="h-28 w-28 rounded-2xl border-2 border-dashed border-accent/40 bg-accent/5 flex flex-col items-center justify-center gap-1 hover:border-accent hover:bg-accent/10 transition-all overflow-hidden"
+                  className="h-28 w-28 rounded-2xl border-2 border-dashed border-accent/50 bg-accent/5 flex flex-col items-center justify-center gap-1 hover:border-accent hover:bg-accent/10 transition-all overflow-hidden"
                 >
                   {form.car_photo_url ? (
                     <img src={form.car_photo_url} alt="Veículo" className="h-full w-full object-cover" />
                   ) : uploadingCarPhoto ? (
-                    <span className="text-xs text-muted-foreground">Enviando...</span>
+                    <span className="text-xs font-bold text-muted-foreground">Enviando...</span>
                   ) : (
                     <>
-                      <Car className="h-6 w-6 text-accent/60" />
-                      <span className="text-[10px] text-accent/60 font-medium">Adicionar</span>
+                      <Car className="h-7 w-7 text-accent/70" />
+                      <span className="text-[10px] text-accent/70 font-bold">Adicionar</span>
                     </>
                   )}
                 </button>
@@ -172,40 +170,40 @@ const ResidentsPage = () => {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <Label className="font-bold">Nome *</Label>
-                <Input value={form.name} onChange={(e) => update("name", e.target.value)} placeholder="Nome completo" required className="font-medium" />
+                <Label className="font-extrabold text-sm">Nome *</Label>
+                <Input value={form.name} onChange={(e) => update("name", e.target.value)} placeholder="Nome completo" required className="font-semibold h-12 bg-secondary/50 border-border" />
               </div>
               <div className="space-y-1.5">
-                <Label className="font-bold">Tipo</Label>
-                <select className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm font-medium" value={form.type} onChange={(e) => update("type", e.target.value)}>
+                <Label className="font-extrabold text-sm">Tipo</Label>
+                <select className="flex h-12 w-full rounded-xl border border-border bg-secondary/50 px-3 py-2 text-sm font-semibold" value={form.type} onChange={(e) => update("type", e.target.value)}>
                   <option value="morador">Morador</option>
                   <option value="visitante">Visitante</option>
                 </select>
               </div>
               <div className="space-y-1.5">
-                <Label className="font-bold">Unidade</Label>
-                <Input value={form.unit} onChange={(e) => update("unit", e.target.value)} placeholder="Casa, Bloco..." className="font-medium" />
+                <Label className="font-extrabold text-sm">Unidade / Casa</Label>
+                <Input value={form.unit} onChange={(e) => update("unit", e.target.value)} placeholder="Casa, Bloco..." className="font-semibold h-12 bg-secondary/50 border-border" />
               </div>
               <div className="space-y-1.5">
-                <Label className="font-bold">Telefone</Label>
-                <Input value={form.phone} onChange={(e) => update("phone", e.target.value)} placeholder="(11) 99999-9999" className="font-medium" />
+                <Label className="font-extrabold text-sm">Telefone</Label>
+                <Input value={form.phone} onChange={(e) => update("phone", e.target.value)} placeholder="(11) 99999-9999" className="font-semibold h-12 bg-secondary/50 border-border" />
               </div>
               <div className="space-y-1.5">
-                <Label className="font-bold">Placa</Label>
-                <Input value={form.plate} onChange={(e) => update("plate", e.target.value.toUpperCase())} placeholder="ABC-1D23" maxLength={8} className="font-mono font-bold" />
+                <Label className="font-extrabold text-sm">Placa</Label>
+                <Input value={form.plate} onChange={(e) => update("plate", e.target.value.toUpperCase())} placeholder="ABC-1D23" maxLength={8} className="font-mono font-black text-lg h-12 bg-secondary/50 border-border" />
               </div>
               <div className="space-y-1.5">
-                <Label className="font-bold">Modelo</Label>
-                <Input value={form.car_model} onChange={(e) => update("car_model", e.target.value)} placeholder="Ex: Civic, Onix..." />
+                <Label className="font-extrabold text-sm">Modelo</Label>
+                <Input value={form.car_model} onChange={(e) => update("car_model", e.target.value)} placeholder="Ex: Civic, Onix..." className="font-semibold h-12 bg-secondary/50 border-border" />
               </div>
               <div className="space-y-1.5">
-                <Label className="font-bold">Cor</Label>
-                <Input value={form.car_color} onChange={(e) => update("car_color", e.target.value)} placeholder="Ex: Prata, Preto..." />
+                <Label className="font-extrabold text-sm">Cor</Label>
+                <Input value={form.car_color} onChange={(e) => update("car_color", e.target.value)} placeholder="Ex: Prata, Preto..." className="font-semibold h-12 bg-secondary/50 border-border" />
               </div>
             </div>
             <div className="flex gap-2 justify-end pt-2">
-              <Button type="button" variant="ghost" onClick={cancelForm}><X className="h-4 w-4 mr-1" /> Cancelar</Button>
-              <Button type="submit" className="gap-2 rounded-full px-6 font-bold"><Save className="h-4 w-4" /> {editingId ? "Atualizar" : "Cadastrar"}</Button>
+              <Button type="button" variant="ghost" onClick={cancelForm} className="font-bold"><X className="h-4 w-4 mr-1" /> Cancelar</Button>
+              <Button type="submit" className="gap-2 rounded-full px-6 font-extrabold shadow-md"><Save className="h-4 w-4" /> {editingId ? "Atualizar" : "Cadastrar"}</Button>
             </div>
           </form>
         </div>
@@ -218,7 +216,7 @@ const ResidentsPage = () => {
           placeholder="Buscar por nome, placa ou casa"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="pl-12 h-12 rounded-2xl bg-card border-0 shadow-sm text-base font-medium"
+          className="pl-12 h-14 rounded-2xl bg-card border-border shadow-sm text-base font-semibold"
         />
       </div>
 
@@ -228,10 +226,10 @@ const ResidentsPage = () => {
           <button
             key={t}
             onClick={() => setFilterType(t)}
-            className={`rounded-full px-5 py-2 text-sm font-bold transition-all ${
+            className={`rounded-full px-5 py-2.5 text-sm font-extrabold transition-all ${
               filterType === t
                 ? "bg-primary text-primary-foreground shadow-md"
-                : "bg-secondary text-foreground/60 hover:text-foreground"
+                : "bg-secondary text-foreground/70 hover:text-foreground border border-border"
             }`}
           >
             {t === "" ? "Todos" : t === "morador" ? "Moradores" : "Visitantes"}
@@ -241,10 +239,10 @@ const ResidentsPage = () => {
 
       {/* List */}
       {isLoading ? (
-        <p className="text-sm text-muted-foreground text-center py-8">Carregando...</p>
+        <p className="text-sm font-semibold text-muted-foreground text-center py-8">Carregando...</p>
       ) : !filtered.length ? (
         <div className="apple-card p-8 text-center">
-          <p className="text-muted-foreground font-medium">
+          <p className="text-muted-foreground font-semibold">
             {search || filterType ? "Nenhum resultado." : "Nenhum cadastro ainda."}
           </p>
         </div>
@@ -255,17 +253,21 @@ const ResidentsPage = () => {
               {/* Avatar */}
               <div className="shrink-0">
                 {r.photo_url ? (
-                  <img src={r.photo_url} alt={r.name} className="h-14 w-14 rounded-full object-cover border-2 border-primary/20" />
+                  <img src={r.photo_url} alt={r.name} className="h-16 w-16 rounded-full object-cover border-2 border-primary/30 shadow" />
                 ) : (
-                  <div className="h-14 w-14 rounded-full bg-primary/15 flex items-center justify-center">
-                    <User className="h-7 w-7 text-primary" />
+                  <div className="h-16 w-16 rounded-full bg-primary/15 flex items-center justify-center">
+                    <User className="h-8 w-8 text-primary" />
                   </div>
                 )}
               </div>
 
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-bold text-lg text-foreground uppercase">{r.name}</span>
+                  {/* Unit large */}
+                  {r.unit && (
+                    <span className="text-3xl font-black text-foreground mr-2">{r.unit}</span>
+                  )}
+                  <span className="font-extrabold text-lg text-foreground uppercase">{r.name}</span>
                   <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
                     r.type === "morador"
                       ? "bg-primary/15 text-primary"
@@ -275,12 +277,18 @@ const ResidentsPage = () => {
                   </span>
                 </div>
                 {r.plate && (
-                  <div className="mt-1">
+                  <div className="mt-1.5">
                     <PlateBadge plate={r.plate} size="sm" />
                   </div>
                 )}
-                {r.unit && <p className="text-sm font-semibold text-muted-foreground mt-0.5">Casa {r.unit}</p>}
               </div>
+
+              {/* Car photo thumbnail */}
+              {r.car_photo_url && (
+                <div className="shrink-0">
+                  <img src={r.car_photo_url} alt="Veículo" className="h-12 w-12 rounded-xl object-cover border border-border shadow-sm" />
+                </div>
+              )}
 
               <div className="flex gap-1 shrink-0">
                 <button onClick={() => startEdit(r)} className="h-10 w-10 rounded-full hover:bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
@@ -294,12 +302,12 @@ const ResidentsPage = () => {
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Excluir cadastro</AlertDialogTitle>
-                      <AlertDialogDescription>Remover <strong>{r.name}</strong>?</AlertDialogDescription>
+                      <AlertDialogTitle className="font-extrabold">Excluir cadastro</AlertDialogTitle>
+                      <AlertDialogDescription className="text-base">Remover <strong className="text-foreground">{r.name}</strong>?</AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => handleDelete(r.id)}>Excluir</AlertDialogAction>
+                      <AlertDialogCancel className="font-bold">Cancelar</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => handleDelete(r.id)} className="font-bold">Excluir</AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
