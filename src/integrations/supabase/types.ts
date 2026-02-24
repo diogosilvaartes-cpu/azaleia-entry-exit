@@ -69,11 +69,13 @@ export type Database = {
         Row: {
           car_color: string | null
           car_model: string | null
+          car_photo_url: string | null
           created_at: string
           id: string
           name: string
           notes: string | null
           phone: string | null
+          photo_url: string | null
           plate: string | null
           type: string
           unit: string | null
@@ -82,11 +84,13 @@ export type Database = {
         Insert: {
           car_color?: string | null
           car_model?: string | null
+          car_photo_url?: string | null
           created_at?: string
           id?: string
           name: string
           notes?: string | null
           phone?: string | null
+          photo_url?: string | null
           plate?: string | null
           type?: string
           unit?: string | null
@@ -95,11 +99,13 @@ export type Database = {
         Update: {
           car_color?: string | null
           car_model?: string | null
+          car_photo_url?: string | null
           created_at?: string
           id?: string
           name?: string
           notes?: string | null
           phone?: string | null
+          photo_url?: string | null
           plate?: string | null
           type?: string
           unit?: string | null

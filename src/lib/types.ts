@@ -37,6 +37,8 @@ export interface Resident {
   car_color: string | null;
   plate: string | null;
   notes: string | null;
+  photo_url: string | null;
+  car_photo_url: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -50,6 +52,8 @@ export interface ResidentInsert {
   car_color?: string;
   plate?: string;
   notes?: string;
+  photo_url?: string;
+  car_photo_url?: string;
 }
 
 export interface ShiftNote {
