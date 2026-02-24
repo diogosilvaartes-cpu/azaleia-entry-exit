@@ -1,13 +1,10 @@
 import { Link } from "react-router-dom";
 import AppLayout from "@/components/AppLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { PlusCircle, LogIn, LogOut as LogOutIcon, Users, Clock } from "lucide-react";
+import { PlusCircle, ArrowUpRight, LogIn, LogOut as LogOutIcon, ChevronRight, User } from "lucide-react";
 import { useActiveEntries, useTodayStats, useRegisterExit } from "@/hooks/useAccessLogs";
 import { useToast } from "@/hooks/use-toast";
-import ShiftNotesWidget from "@/components/ShiftNotesWidget";
+import PlateBadge from "@/components/PlateBadge";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,7 +21,7 @@ const formatTime = (iso: string) =>
   new Date(iso).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
 const Dashboard = () => {
-  const { data: stats, isLoading: statsLoading } = useTodayStats();
+  const { data: stats } = useTodayStats();
   const { data: active, isLoading: activeLoading } = useActiveEntries();
   const registerExit = useRegisterExit();
   const { toast } = useToast();
@@ -38,159 +35,115 @@ const Dashboard = () => {
     }
   };
 
-
   return (
     <AppLayout>
+      {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Painel</h1>
+        <h1 className="text-2xl font-bold text-foreground">Residencial Azaleia</h1>
         <p className="text-sm text-muted-foreground">
           {new Date().toLocaleDateString("pt-BR", {
             weekday: "long",
             day: "numeric",
             month: "long",
-            year: "numeric",
           })}
         </p>
       </div>
 
-      {/* Action Buttons + Active Now */}
-      <div className="mb-6 grid gap-4 sm:grid-cols-3">
+      {/* Two big action buttons */}
+      <div className="mb-8 grid grid-cols-2 gap-4">
         <Link to="/new" className="block">
-          <Card className="h-full cursor-pointer border-primary/30 transition-colors hover:border-primary hover:bg-primary/5 animate-fade-in">
-            <CardContent className="flex flex-col items-center justify-center gap-3 p-6">
-              <div className="rounded-lg bg-primary/10 p-4 text-primary">
-                <PlusCircle className="h-7 w-7" />
-              </div>
-              <span className="text-lg font-semibold text-foreground">Nova Entrada</span>
-            </CardContent>
-          </Card>
+          <button className="w-full h-28 rounded-[20px] bg-[hsl(211,100%,50%)] text-white flex items-center justify-center gap-3 text-xl font-semibold shadow-lg shadow-primary/20 transition-transform active:scale-[0.98] hover:brightness-110">
+            <PlusCircle className="h-7 w-7" />
+            Nova Entrada
+          </button>
         </Link>
         <Link to="/exit" className="block">
-          <Card className="h-full cursor-pointer border-success/30 transition-colors hover:border-success hover:bg-success/5 animate-fade-in">
-            <CardContent className="flex flex-col items-center justify-center gap-3 p-6">
-              <div className="rounded-lg bg-success/10 p-4 text-success">
-                <LogOutIcon className="h-7 w-7" />
-              </div>
-              <span className="text-lg font-semibold text-foreground">Nova Saída</span>
-            </CardContent>
-          </Card>
+          <button className="w-full h-28 rounded-[20px] bg-[hsl(145,65%,42%)] text-white flex items-center justify-center gap-3 text-xl font-semibold shadow-lg shadow-success/20 transition-transform active:scale-[0.98] hover:brightness-110">
+            <ArrowUpRight className="h-7 w-7" />
+            Nova Saída
+          </button>
         </Link>
-        <Card className="animate-fade-in">
-          <CardContent className="flex flex-col items-center justify-center gap-3 p-6">
-            <div className="rounded-lg bg-warning/10 p-4 text-warning">
-              <Users className="h-7 w-7" />
-            </div>
-            <span className="text-lg font-semibold text-foreground">
-              {statsLoading ? "–" : stats?.active ?? 0}
-            </span>
-            <span className="text-sm text-muted-foreground">Ativos Agora</span>
-          </CardContent>
-        </Card>
       </div>
 
       {/* Active Entries */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Clock className="h-5 w-5 text-warning" />
-            Ativos Agora
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {activeLoading ? (
-            <p className="text-sm text-muted-foreground">Carregando...</p>
-          ) : !active?.length ? (
-            <p className="py-8 text-center text-sm text-muted-foreground">
-              Nenhuma entrada ativa no momento.
-            </p>
-          ) : (
-            <div className="space-y-2">
-              {active.map((log) => (
-                <div
-                  key={log.id}
-                  className="flex flex-col gap-2 rounded-lg border border-border bg-background p-4 sm:flex-row sm:items-center sm:justify-between animate-fade-in"
-                >
-                  <div className="flex-1 space-y-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-medium text-foreground">{log.driver_name}</span>
-                      {log.plate && (
-                        <Badge className="bg-warning/15 text-warning border-warning/30 font-mono text-sm font-bold tracking-wider">
-                          {log.plate}
-                        </Badge>
-                      )}
-                      <Badge variant="secondary">{log.destination}</Badge>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      Entrada: {formatTime(log.entry_time)}{log.authorized_by ? ` · Liberado por: ${log.authorized_by}` : ""}
-                    </p>
-                  </div>
+      <div className="mb-8">
+        <h2 className="text-lg font-semibold text-foreground mb-3">
+          Ativos Agora {active?.length ? `(${active.length})` : ""}
+        </h2>
 
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="gap-1 border-success text-success hover:bg-success hover:text-success-foreground"
-                      >
-                        <LogOutIcon className="h-3.5 w-3.5" />
-                        Dar Saída
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Confirmar saída</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Registrar saída de <strong>{log.driver_name}</strong>
-                          {log.plate ? ` (${log.plate})` : ""}?
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleExit(log.id)}>
-                          Confirmar Saída
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-      {/* Shift Notes */}
-      <div className="mt-6">
-        <ShiftNotesWidget />
+        {activeLoading ? (
+          <p className="text-sm text-muted-foreground">Carregando...</p>
+        ) : !active?.length ? (
+          <div className="apple-card p-8 text-center">
+            <p className="text-sm text-muted-foreground">Nenhuma entrada ativa no momento.</p>
+          </div>
+        ) : (
+          <div className="grid gap-3 sm:grid-cols-2">
+            {active.map((log) => (
+              <AlertDialog key={log.id}>
+                <AlertDialogTrigger asChild>
+                  <button className="apple-card p-4 w-full text-left flex items-center gap-4 transition-all hover:shadow-md active:scale-[0.99] cursor-pointer">
+                    <div className="flex-1 min-w-0">
+                      {log.plate ? (
+                        <PlateBadge plate={log.plate} size="sm" />
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center">
+                            <User className="h-5 w-5 text-muted-foreground" />
+                          </div>
+                          <span className="font-semibold text-lg">Visitante</span>
+                        </div>
+                      )}
+                      <p className="text-sm text-muted-foreground mt-2 truncate">
+                        {log.destination} • {log.driver_name}
+                      </p>
+                    </div>
+                    <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0" />
+                  </button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Confirmar saída</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Registrar saída de <strong>{log.driver_name}</strong>
+                      {log.plate ? ` (${log.plate})` : ""}?
+                      <br />
+                      <span className="text-xs">Entrada: {formatTime(log.entry_time)}</span>
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => handleExit(log.id)}>
+                      Confirmar Saída
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Stats summary at the bottom */}
-      <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        <Card className="animate-fade-in">
-          <CardContent className="flex items-center gap-4 p-5">
-            <div className="rounded-lg bg-primary/10 p-3 text-primary">
-              <LogIn className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Entradas Hoje</p>
-              <p className="text-2xl font-bold text-foreground">
-                {statsLoading ? "–" : stats?.entries ?? 0}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="animate-fade-in">
-          <CardContent className="flex items-center gap-4 p-5">
-            <div className="rounded-lg bg-success/10 p-3 text-success">
-              <LogOutIcon className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Saídas Hoje</p>
-              <p className="text-2xl font-bold text-foreground">
-                {statsLoading ? "–" : stats?.exits ?? 0}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+      {/* Stats at bottom */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="apple-card p-5 flex items-center gap-4">
+          <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+            <LogIn className="h-5 w-5 text-primary" />
+          </div>
+          <div>
+            <p className="text-sm text-muted-foreground">Entradas Hoje</p>
+            <p className="text-2xl font-bold">{stats?.entries ?? 0}</p>
+          </div>
+        </div>
+        <div className="apple-card p-5 flex items-center gap-4">
+          <div className="h-10 w-10 rounded-xl bg-success/10 flex items-center justify-center">
+            <LogOutIcon className="h-5 w-5 text-success" />
+          </div>
+          <div>
+            <p className="text-sm text-muted-foreground">Saídas Hoje</p>
+            <p className="text-2xl font-bold">{stats?.exits ?? 0}</p>
+          </div>
+        </div>
       </div>
     </AppLayout>
   );
