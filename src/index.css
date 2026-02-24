@@ -2,82 +2,82 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 @layer base {
   :root {
-    --background: 240 5% 96%;
-    --foreground: 0 0% 5%;
+    --background: 220 10% 92%;
+    --foreground: 0 0% 8%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 11%;
+    --card-foreground: 0 0% 8%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 11%;
+    --popover-foreground: 0 0% 8%;
 
-    --primary: 211 100% 50%;
+    --primary: 211 100% 45%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 5% 93%;
-    --secondary-foreground: 0 0% 11%;
+    --secondary: 220 10% 88%;
+    --secondary-foreground: 0 0% 8%;
 
-    --muted: 240 5% 93%;
-    --muted-foreground: 0 0% 35%;
+    --muted: 220 10% 88%;
+    --muted-foreground: 0 0% 40%;
 
-    --accent: 145 65% 42%;
+    --accent: 145 65% 36%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 0 72% 48%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 6% 90%;
-    --input: 240 6% 90%;
-    --ring: 211 100% 50%;
+    --border: 220 8% 82%;
+    --input: 220 8% 82%;
+    --ring: 211 100% 45%;
 
     --radius: 1rem;
 
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 0 0% 11%;
-    --sidebar-primary: 211 100% 50%;
+    --sidebar-foreground: 0 0% 8%;
+    --sidebar-primary: 211 100% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 5% 96%;
-    --sidebar-accent-foreground: 0 0% 11%;
-    --sidebar-border: 240 6% 90%;
-    --sidebar-ring: 211 100% 50%;
+    --sidebar-accent: 220 10% 92%;
+    --sidebar-accent-foreground: 0 0% 8%;
+    --sidebar-border: 220 8% 82%;
+    --sidebar-ring: 211 100% 45%;
 
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
-    --success: 145 65% 42%;
+    --success: 145 65% 36%;
     --success-foreground: 0 0% 100%;
   }
 
   .dark {
-    --background: 0 0% 7%;
-    --foreground: 0 0% 93%;
-    --card: 0 0% 12%;
-    --card-foreground: 0 0% 93%;
-    --popover: 0 0% 12%;
-    --popover-foreground: 0 0% 93%;
+    --background: 220 15% 10%;
+    --foreground: 0 0% 95%;
+    --card: 220 15% 15%;
+    --card-foreground: 0 0% 95%;
+    --popover: 220 15% 15%;
+    --popover-foreground: 0 0% 95%;
     --primary: 211 100% 50%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 18%;
-    --secondary-foreground: 0 0% 93%;
-    --muted: 0 0% 18%;
+    --secondary: 220 15% 20%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 220 15% 20%;
     --muted-foreground: 0 0% 55%;
     --accent: 145 65% 45%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 18%;
-    --input: 0 0% 18%;
+    --border: 220 15% 22%;
+    --input: 220 15% 22%;
     --ring: 211 100% 50%;
-    --sidebar-background: 0 0% 8%;
+    --sidebar-background: 220 15% 8%;
     --sidebar-foreground: 0 0% 85%;
     --sidebar-primary: 211 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 15%;
+    --sidebar-accent: 220 15% 15%;
     --sidebar-accent-foreground: 0 0% 85%;
-    --sidebar-border: 0 0% 15%;
+    --sidebar-border: 220 15% 18%;
     --sidebar-ring: 211 100% 50%;
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
@@ -101,20 +101,20 @@
 @layer components {
   /* Brazilian license plate style */
   .plate-badge {
-    @apply inline-flex items-center gap-2 rounded-xl border-2 border-foreground/80 bg-card px-4 py-2 font-mono text-2xl font-bold tracking-[0.15em];
+    @apply inline-flex items-center gap-2 rounded-xl border-[3px] border-foreground/90 bg-card px-4 py-2 font-mono text-2xl font-black tracking-[0.18em] shadow-sm;
   }
 
   .plate-badge-sm {
-    @apply inline-flex items-center gap-1.5 rounded-lg border-2 border-foreground/70 bg-card px-3 py-1 font-mono text-base font-bold tracking-[0.12em];
+    @apply inline-flex items-center gap-1.5 rounded-lg border-[2.5px] border-foreground/80 bg-card px-3 py-1.5 font-mono text-lg font-black tracking-[0.15em] shadow-sm;
   }
 
   .plate-badge-lg {
-    @apply inline-flex items-center gap-2 rounded-xl border-2 border-foreground/80 bg-card px-6 py-3 font-mono text-3xl font-bold tracking-[0.18em];
+    @apply inline-flex items-center gap-2 rounded-xl border-[3px] border-foreground/90 bg-card px-6 py-3 font-mono text-3xl font-black tracking-[0.2em] shadow-md;
   }
 
   /* Apple-style card */
   .apple-card {
-    @apply bg-card rounded-2xl shadow-sm border-0;
+    @apply bg-card rounded-2xl shadow-sm border border-border/50;
   }
 }
 

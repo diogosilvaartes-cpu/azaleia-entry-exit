@@ -2,9 +2,11 @@ import { useState, useMemo } from "react";
 import AppLayout from "@/components/AppLayout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Download, Printer, Search } from "lucide-react";
+import { Download, Printer, Search, User } from "lucide-react";
 import { useHistoryLogs } from "@/hooks/useAccessLogs";
+import { useResidents } from "@/hooks/useResidents";
 import PlateBadge from "@/components/PlateBadge";
+import AccessLogSheet from "@/components/AccessLogSheet";
 import type { AccessLog } from "@/lib/types";
 
 const fmt = (iso: string | null, type: "date" | "time") => {
@@ -34,6 +36,9 @@ const exportCSV = (data: AccessLog[]) => {
 const HistoryPage = () => {
   const [search, setSearch] = useState("");
   const { data, isLoading, isError } = useHistoryLogs({});
+  const { data: residents } = useResidents();
+  const [selectedLog, setSelectedLog] = useState<AccessLog | null>(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   const filtered = useMemo(() => {
     if (!data) return [];
@@ -48,26 +53,21 @@ const HistoryPage = () => {
     );
   }, [data, search]);
 
+  const findResident = (name: string, plate: string | null) =>
+    residents?.find(r =>
+      r.name.toLowerCase() === name.toLowerCase() ||
+      (plate && r.plate && r.plate.toLowerCase() === plate.toLowerCase())
+    );
+
   return (
     <AppLayout>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-foreground">Histórico</h1>
+        <h1 className="text-2xl font-extrabold text-foreground tracking-tight">Histórico</h1>
         <div className="flex gap-2 no-print">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => filtered.length && exportCSV(filtered)}
-            disabled={!filtered.length}
-            className="text-muted-foreground"
-          >
+          <Button variant="ghost" size="sm" onClick={() => filtered.length && exportCSV(filtered)} disabled={!filtered.length} className="text-muted-foreground">
             <Download className="h-4 w-4" />
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => window.print()}
-            className="text-muted-foreground"
-          >
+          <Button variant="ghost" size="sm" onClick={() => window.print()} className="text-muted-foreground">
             <Printer className="h-4 w-4" />
           </Button>
         </div>
@@ -75,12 +75,12 @@ const HistoryPage = () => {
 
       {/* Search */}
       <div className="relative mb-6 no-print">
-        <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
         <Input
           placeholder="Buscar por nome, placa, destino..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="pl-10 h-12 rounded-2xl bg-card border-0 shadow-sm"
+          className="pl-12 h-14 rounded-2xl bg-card border-border shadow-sm text-base font-semibold"
         />
       </div>
 
@@ -92,49 +92,72 @@ const HistoryPage = () => {
 
       {/* Cards */}
       {isLoading ? (
-        <p className="text-center text-sm text-muted-foreground py-8">Carregando...</p>
+        <p className="text-center text-sm font-semibold text-muted-foreground py-8">Carregando...</p>
       ) : isError ? (
-        <p className="text-center text-sm text-destructive py-8">Erro ao carregar dados.</p>
+        <p className="text-center text-sm font-bold text-destructive py-8">Erro ao carregar dados.</p>
       ) : !filtered.length ? (
         <div className="apple-card p-12 text-center">
           <Search className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">Nenhum registro encontrado.</p>
+          <p className="text-sm font-semibold text-muted-foreground">Nenhum registro encontrado.</p>
         </div>
       ) : (
         <div className="space-y-3">
-          {filtered.map((log) => (
-            <div key={log.id} className="apple-card p-4 flex items-center gap-4">
-              <div className="flex-1 min-w-0">
-                <div className="flex flex-wrap items-center gap-3 mb-1">
-                  {log.plate ? (
-                    <PlateBadge plate={log.plate} size="sm" />
+          {filtered.map((log) => {
+            const resident = findResident(log.driver_name, log.plate);
+            return (
+              <button
+                key={log.id}
+                onClick={() => { setSelectedLog(log); setSheetOpen(true); }}
+                className="apple-card p-4 w-full text-left flex items-center gap-4 transition-all hover:shadow-md active:scale-[0.99] cursor-pointer"
+              >
+                {/* Photo */}
+                <div className="shrink-0">
+                  {resident?.photo_url ? (
+                    <img src={resident.photo_url} alt={log.driver_name} className="h-12 w-12 rounded-full object-cover border-2 border-primary/30 shadow" />
                   ) : (
-                    <span className="font-semibold">{log.driver_name}</span>
+                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                      <User className="h-6 w-6 text-primary/60" />
+                    </div>
                   )}
-                  <span
-                    className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${
-                      log.exit_time
-                        ? "bg-secondary text-muted-foreground"
-                        : "bg-warning/15 text-warning"
-                    }`}
-                  >
-                    {log.exit_time ? "Finalizado" : "Ativo"}
-                  </span>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  {log.plate && <span className="font-medium text-foreground">{log.driver_name} • </span>}
-                  {log.destination}
-                  {log.authorized_by && ` • ${log.authorized_by}`}
-                </p>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  {fmt(log.entry_time, "date")} · {fmt(log.entry_time, "time")}
-                  {log.exit_time && ` → ${fmt(log.exit_time, "time")}`}
-                </p>
-              </div>
-            </div>
-          ))}
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-3 mb-1">
+                    {/* Destination big */}
+                    <span className="text-2xl font-black text-foreground">{log.destination}</span>
+                    <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
+                      log.exit_time
+                        ? "bg-muted text-muted-foreground"
+                        : "bg-warning/20 text-warning font-extrabold"
+                    }`}>
+                      {log.exit_time ? "Finalizado" : "Ativo"}
+                    </span>
+                  </div>
+                  <p className="text-sm font-bold text-foreground/80 uppercase">{log.driver_name}</p>
+                  {log.plate && (
+                    <div className="mt-1">
+                      <PlateBadge plate={log.plate} size="sm" />
+                    </div>
+                  )}
+                  <p className="text-xs font-semibold text-muted-foreground mt-1">
+                    {fmt(log.entry_time, "date")} · {fmt(log.entry_time, "time")}
+                    {log.exit_time && ` → ${fmt(log.exit_time, "time")}`}
+                  </p>
+                </div>
+              </button>
+            );
+          })}
         </div>
       )}
+
+      {/* Detail Sheet */}
+      <AccessLogSheet
+        log={selectedLog}
+        open={sheetOpen}
+        onOpenChange={setSheetOpen}
+        residentPhoto={selectedLog ? findResident(selectedLog.driver_name, selectedLog.plate)?.photo_url : null}
+        carPhoto={selectedLog ? findResident(selectedLog.driver_name, selectedLog.plate)?.car_photo_url : null}
+      />
     </AppLayout>
   );
 };
