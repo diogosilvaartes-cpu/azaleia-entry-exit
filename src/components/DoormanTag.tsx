@@ -10,8 +10,7 @@ const DoormanTag = ({ userId }: Props) => {
   const { data: email } = useQuery({
     queryKey: ["user_email", userId],
     queryFn: async () => {
-      // Try to get from profiles or fallback to session info
-      const { data } = await supabase.rpc("get_user_email", { user_id: userId });
+      const { data } = await (supabase.rpc as any)("get_user_email", { user_id: userId });
       return (data as string) || null;
     },
     staleTime: Infinity,
