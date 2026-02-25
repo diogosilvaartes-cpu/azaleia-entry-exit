@@ -18,6 +18,14 @@ const fmt = (iso: string | null, type: "date" | "time") => {
     : d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 };
 
+const fmtGroupDate = (iso: string) => {
+  const d = new Date(iso);
+  const weekday = d.toLocaleDateString("pt-BR", { weekday: "short" }).replace(".", "");
+  const day = d.getDate().toString().padStart(2, "0");
+  const month = d.toLocaleDateString("pt-BR", { month: "short" }).replace(".", "");
+  return `${weekday}, ${day} ${month}`;
+};
+
 const exportCSV = (data: AccessLog[]) => {
   const header = "Data,Entrada,Placa,Motorista,Destino,Liberado Por,Saída,Status\n";
   const rows = data
@@ -53,6 +61,17 @@ const HistoryPage = () => {
         (l.authorized_by && l.authorized_by.toLowerCase().includes(q))
     );
   }, [data, search]);
+
+  // Group by date
+  const grouped = useMemo(() => {
+    const map = new Map<string, AccessLog[]>();
+    for (const log of filtered) {
+      const dateKey = new Date(log.entry_time).toDateString();
+      if (!map.has(dateKey)) map.set(dateKey, []);
+      map.get(dateKey)!.push(log);
+    }
+    return Array.from(map.entries());
+  }, [filtered]);
 
   const findResident = (name: string, plate: string | null) =>
     residents?.find(r =>
@@ -91,21 +110,7 @@ const HistoryPage = () => {
         <p className="text-sm">Gerado em: {new Date().toLocaleString("pt-BR")}</p>
       </div>
 
-      {/* Table header */}
-      {!isLoading && !isError && filtered.length > 0 && (
-        <div className="hidden sm:grid grid-cols-[80px_60px_100px_1fr_80px_100px_60px_auto] gap-2 px-4 py-2 text-xs font-extrabold text-muted-foreground uppercase tracking-wider border-b border-border mb-1">
-          <span>Data</span>
-          <span>Hora</span>
-          <span>Placa</span>
-          <span>Nome</span>
-          <span>Destino</span>
-          <span>Liberado</span>
-          <span>Saída</span>
-          <span>Status</span>
-        </div>
-      )}
-
-      {/* Rows */}
+      {/* Content */}
       {isLoading ? (
         <p className="text-center text-sm font-semibold text-muted-foreground py-8">Carregando...</p>
       ) : isError ? (
@@ -116,47 +121,61 @@ const HistoryPage = () => {
           <p className="text-sm font-semibold text-muted-foreground">Nenhum registro encontrado.</p>
         </div>
       ) : (
-        <div className="space-y-1">
-          {filtered.map((log) => (
-            <button
-              key={log.id}
-              onClick={() => { setSelectedLog(log); setSheetOpen(true); }}
-              className="w-full text-left rounded-xl bg-card border border-border px-4 py-3 flex flex-col sm:grid sm:grid-cols-[80px_60px_100px_1fr_80px_100px_60px_auto] sm:items-center gap-1 sm:gap-2 transition-all hover:bg-accent/50 active:scale-[0.995] cursor-pointer"
-            >
-              {/* Data */}
-              <span className="text-xs font-bold text-muted-foreground">
-                {fmt(log.entry_time, "date")}
-              </span>
-              {/* Hora */}
-              <span className="text-sm font-extrabold text-foreground">
-                {fmt(log.entry_time, "time")}
-              </span>
-              {/* Placa */}
-              <span>
-                {log.plate ? <PlateBadge plate={log.plate} size="sm" /> : <span className="text-xs text-muted-foreground">–</span>}
-              </span>
-              {/* Nome */}
-              <span className="text-sm font-bold text-foreground truncate uppercase">{log.driver_name}</span>
-              {/* Destino */}
-              <span className="text-lg font-black text-foreground">{log.destination}</span>
-              {/* Liberado por */}
-              <span className="text-xs font-semibold text-muted-foreground truncate">{log.authorized_by || "–"}</span>
-              {/* Saída */}
-              <span className="text-sm font-bold text-foreground">
-                {log.exit_time ? fmt(log.exit_time, "time") : "–"}
-              </span>
-              {/* Status + Doorman */}
-              <div className="flex items-center gap-2">
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                  log.exit_time
-                    ? "bg-muted text-muted-foreground"
-                    : "bg-warning/20 text-warning"
-                }`}>
-                  {log.exit_time ? "OK" : "ATIVO"}
+        <div className="space-y-6">
+          {grouped.map(([dateKey, logs]) => (
+            <div key={dateKey}>
+              {/* Date group header */}
+              <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm py-2 mb-1">
+                <span className="text-xs font-extrabold text-muted-foreground uppercase tracking-wider">
+                  {fmtGroupDate(logs[0].entry_time)}
                 </span>
-                <DoormanTag userId={log.created_by} />
               </div>
-            </button>
+
+              {/* Column header */}
+              <div className="hidden sm:grid grid-cols-[50px_90px_1fr_70px_90px_60px_auto] gap-2 px-4 py-1.5 text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">
+                <span>Hora</span>
+                <span>Placa</span>
+                <span>Nome</span>
+                <span>Destino</span>
+                <span>Liberado</span>
+                <span>Saída</span>
+                <span>Status</span>
+              </div>
+
+              {/* Rows */}
+              <div className="space-y-0.5">
+                {logs.map((log) => (
+                  <button
+                    key={log.id}
+                    onClick={() => { setSelectedLog(log); setSheetOpen(true); }}
+                    className="w-full text-left rounded-lg bg-card border border-border px-4 py-2 flex flex-col sm:grid sm:grid-cols-[50px_90px_1fr_70px_90px_60px_auto] sm:items-center gap-1 sm:gap-2 transition-all hover:bg-accent/50 active:scale-[0.998] cursor-pointer"
+                  >
+                    <span className="text-sm font-extrabold text-foreground">
+                      {fmt(log.entry_time, "time")}
+                    </span>
+                    <span>
+                      {log.plate ? <PlateBadge plate={log.plate} size="sm" /> : <span className="text-xs text-muted-foreground">–</span>}
+                    </span>
+                    <span className="text-sm font-bold text-foreground truncate uppercase">{log.driver_name}</span>
+                    <span className="text-sm font-black text-foreground">{log.destination}</span>
+                    <span className="text-xs font-semibold text-muted-foreground truncate">{log.authorized_by || "–"}</span>
+                    <span className="text-sm font-bold text-foreground">
+                      {log.exit_time ? fmt(log.exit_time, "time") : "–"}
+                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                        log.exit_time
+                          ? "bg-muted text-muted-foreground"
+                          : "bg-warning/20 text-warning"
+                      }`}>
+                        {log.exit_time ? "OK" : "ATIVO"}
+                      </span>
+                      <DoormanTag userId={log.created_by} />
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       )}

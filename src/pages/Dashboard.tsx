@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import AppLayout from "@/components/AppLayout";
-import { PlusCircle, ArrowUpRight, LogOut as LogOutIcon, User, Search } from "lucide-react";
+import { PlusCircle, ArrowUpRight, LogOut as LogOutIcon, User, Pencil } from "lucide-react";
 import { useActiveEntries, useRegisterExit, useHistoryLogs } from "@/hooks/useAccessLogs";
 import { useResidents } from "@/hooks/useResidents";
 import { useToast } from "@/hooks/use-toast";
@@ -24,7 +24,6 @@ const Dashboard = () => {
   const registerExit = useRegisterExit();
   const { toast } = useToast();
 
-  // Today's history
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const { data: todayLogs } = useHistoryLogs({ dateFrom: today.toISOString() });
@@ -49,7 +48,6 @@ const Dashboard = () => {
       (plate && r.plate && r.plate.toLowerCase() === plate.toLowerCase())
     );
 
-  // Filter active entries to only visitors (not residents)
   const activeVisitors = useMemo(() => {
     if (!active || !residents) return active || [];
     const residentNames = new Set(residents.map(r => r.name.toLowerCase()));
@@ -138,12 +136,22 @@ const Dashboard = () => {
                     </div>
                   </button>
 
-                  <button
-                    onClick={() => setExitTarget(log)}
-                    className="shrink-0 h-12 w-12 rounded-xl bg-success/15 flex items-center justify-center hover:bg-success/25 transition-colors"
-                  >
-                    <LogOutIcon className="h-5 w-5 text-success" />
-                  </button>
+                  <div className="shrink-0 flex flex-col gap-2">
+                    <button
+                      onClick={() => setExitTarget(log)}
+                      className="h-11 w-11 rounded-xl bg-success/15 flex items-center justify-center hover:bg-success/25 transition-colors"
+                      title="Dar saída"
+                    >
+                      <LogOutIcon className="h-5 w-5 text-success" />
+                    </button>
+                    <button
+                      onClick={() => openSheet(log)}
+                      className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center hover:bg-primary/20 transition-colors"
+                      title="Editar"
+                    >
+                      <Pencil className="h-4 w-4 text-primary" />
+                    </button>
+                  </div>
                 </div>
               );
             })}
@@ -151,7 +159,7 @@ const Dashboard = () => {
         )}
       </div>
 
-      {/* Today's History (replaces stats) */}
+      {/* Today's History */}
       <div>
         <h2 className="text-lg font-extrabold text-foreground mb-3 tracking-tight">
           Histórico de Hoje {todayLogs?.length ? `(${todayLogs.length})` : ""}
@@ -164,26 +172,47 @@ const Dashboard = () => {
         ) : (
           <div className="space-y-1">
             {todayLogs.map((log) => (
-              <button
+              <div
                 key={log.id}
-                onClick={() => openSheet(log)}
-                className="w-full text-left rounded-xl bg-card border border-border px-4 py-2.5 flex items-center gap-3 transition-all hover:bg-accent/50 active:scale-[0.995] cursor-pointer"
+                className="w-full rounded-xl bg-card border border-border px-4 py-2.5 flex items-center gap-3 transition-all hover:bg-accent/50"
               >
-                <span className="text-sm font-extrabold text-foreground w-12 shrink-0">
-                  {formatTime(log.entry_time)}
-                </span>
-                <span className="text-lg font-black text-foreground w-12 shrink-0">{log.destination}</span>
-                <span className="text-sm font-bold text-foreground/80 uppercase truncate flex-1">{log.driver_name}</span>
-                {log.plate && <PlateBadge plate={log.plate} size="sm" />}
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${
-                  log.exit_time
-                    ? "bg-muted text-muted-foreground"
-                    : "bg-warning/20 text-warning"
-                }`}>
-                  {log.exit_time ? `↑${new Date(log.exit_time).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}` : "ATIVO"}
-                </span>
-                <DoormanTag userId={log.created_by} />
-              </button>
+                <button onClick={() => openSheet(log)} className="flex-1 min-w-0 flex items-center gap-3 text-left">
+                  <span className="text-sm font-extrabold text-foreground w-12 shrink-0">
+                    {formatTime(log.entry_time)}
+                  </span>
+                  <span className="text-lg font-black text-foreground w-12 shrink-0">{log.destination}</span>
+                  <span className="text-sm font-bold text-foreground/80 uppercase truncate flex-1">{log.driver_name}</span>
+                  {log.plate && <PlateBadge plate={log.plate} size="sm" />}
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${
+                    log.exit_time
+                      ? "bg-muted text-muted-foreground"
+                      : "bg-warning/20 text-warning"
+                  }`}>
+                    {log.exit_time ? `↑${new Date(log.exit_time).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}` : "ATIVO"}
+                  </span>
+                  <DoormanTag userId={log.created_by} />
+                </button>
+
+                {/* Action buttons */}
+                <div className="shrink-0 flex items-center gap-1.5">
+                  {!log.exit_time && (
+                    <button
+                      onClick={() => setExitTarget(log)}
+                      className="h-8 w-8 rounded-lg bg-success/15 flex items-center justify-center hover:bg-success/25 transition-colors"
+                      title="Dar saída"
+                    >
+                      <LogOutIcon className="h-4 w-4 text-success" />
+                    </button>
+                  )}
+                  <button
+                    onClick={() => openSheet(log)}
+                    className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center hover:bg-primary/20 transition-colors"
+                    title="Editar"
+                  >
+                    <Pencil className="h-3.5 w-3.5 text-primary" />
+                  </button>
+                </div>
+              </div>
             ))}
           </div>
         )}
