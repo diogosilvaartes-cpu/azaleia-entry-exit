@@ -2,11 +2,12 @@ import { useState, useMemo } from "react";
 import AppLayout from "@/components/AppLayout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Download, Printer, Search, User } from "lucide-react";
+import { Download, Printer, Search } from "lucide-react";
 import { useHistoryLogs } from "@/hooks/useAccessLogs";
 import { useResidents } from "@/hooks/useResidents";
 import PlateBadge from "@/components/PlateBadge";
 import AccessLogSheet from "@/components/AccessLogSheet";
+import DoormanTag from "@/components/DoormanTag";
 import type { AccessLog } from "@/lib/types";
 
 const fmt = (iso: string | null, type: "date" | "time") => {
@@ -74,13 +75,13 @@ const HistoryPage = () => {
       </div>
 
       {/* Search */}
-      <div className="relative mb-6 no-print">
+      <div className="relative mb-4 no-print">
         <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
         <Input
           placeholder="Buscar por nome, placa, destino..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="pl-12 h-14 rounded-2xl bg-card border-border shadow-sm text-base font-semibold"
+          className="pl-12 h-12 rounded-2xl bg-card border-border shadow-sm text-base font-semibold"
         />
       </div>
 
@@ -90,7 +91,21 @@ const HistoryPage = () => {
         <p className="text-sm">Gerado em: {new Date().toLocaleString("pt-BR")}</p>
       </div>
 
-      {/* Cards */}
+      {/* Table header */}
+      {!isLoading && !isError && filtered.length > 0 && (
+        <div className="hidden sm:grid grid-cols-[80px_60px_100px_1fr_80px_100px_60px_auto] gap-2 px-4 py-2 text-xs font-extrabold text-muted-foreground uppercase tracking-wider border-b border-border mb-1">
+          <span>Data</span>
+          <span>Hora</span>
+          <span>Placa</span>
+          <span>Nome</span>
+          <span>Destino</span>
+          <span>Liberado</span>
+          <span>Saída</span>
+          <span>Status</span>
+        </div>
+      )}
+
+      {/* Rows */}
       {isLoading ? (
         <p className="text-center text-sm font-semibold text-muted-foreground py-8">Carregando...</p>
       ) : isError ? (
@@ -101,52 +116,48 @@ const HistoryPage = () => {
           <p className="text-sm font-semibold text-muted-foreground">Nenhum registro encontrado.</p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {filtered.map((log) => {
-            const resident = findResident(log.driver_name, log.plate);
-            return (
-              <button
-                key={log.id}
-                onClick={() => { setSelectedLog(log); setSheetOpen(true); }}
-                className="apple-card p-4 w-full text-left flex items-center gap-4 transition-all hover:shadow-md active:scale-[0.99] cursor-pointer"
-              >
-                {/* Photo */}
-                <div className="shrink-0">
-                  {resident?.photo_url ? (
-                    <img src={resident.photo_url} alt={log.driver_name} className="h-12 w-12 rounded-full object-cover border-2 border-primary/30 shadow" />
-                  ) : (
-                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      <User className="h-6 w-6 text-primary/60" />
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <div className="flex flex-wrap items-center gap-3 mb-1">
-                    {/* Destination big */}
-                    <span className="text-2xl font-black text-foreground">{log.destination}</span>
-                    <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
-                      log.exit_time
-                        ? "bg-muted text-muted-foreground"
-                        : "bg-warning/20 text-warning font-extrabold"
-                    }`}>
-                      {log.exit_time ? "Finalizado" : "Ativo"}
-                    </span>
-                  </div>
-                  <p className="text-sm font-bold text-foreground/80 uppercase">{log.driver_name}</p>
-                  {log.plate && (
-                    <div className="mt-1">
-                      <PlateBadge plate={log.plate} size="sm" />
-                    </div>
-                  )}
-                  <p className="text-xs font-semibold text-muted-foreground mt-1">
-                    {fmt(log.entry_time, "date")} · {fmt(log.entry_time, "time")}
-                    {log.exit_time && ` → ${fmt(log.exit_time, "time")}`}
-                  </p>
-                </div>
-              </button>
-            );
-          })}
+        <div className="space-y-1">
+          {filtered.map((log) => (
+            <button
+              key={log.id}
+              onClick={() => { setSelectedLog(log); setSheetOpen(true); }}
+              className="w-full text-left rounded-xl bg-card border border-border px-4 py-3 flex flex-col sm:grid sm:grid-cols-[80px_60px_100px_1fr_80px_100px_60px_auto] sm:items-center gap-1 sm:gap-2 transition-all hover:bg-accent/50 active:scale-[0.995] cursor-pointer"
+            >
+              {/* Data */}
+              <span className="text-xs font-bold text-muted-foreground">
+                {fmt(log.entry_time, "date")}
+              </span>
+              {/* Hora */}
+              <span className="text-sm font-extrabold text-foreground">
+                {fmt(log.entry_time, "time")}
+              </span>
+              {/* Placa */}
+              <span>
+                {log.plate ? <PlateBadge plate={log.plate} size="sm" /> : <span className="text-xs text-muted-foreground">–</span>}
+              </span>
+              {/* Nome */}
+              <span className="text-sm font-bold text-foreground truncate uppercase">{log.driver_name}</span>
+              {/* Destino */}
+              <span className="text-lg font-black text-foreground">{log.destination}</span>
+              {/* Liberado por */}
+              <span className="text-xs font-semibold text-muted-foreground truncate">{log.authorized_by || "–"}</span>
+              {/* Saída */}
+              <span className="text-sm font-bold text-foreground">
+                {log.exit_time ? fmt(log.exit_time, "time") : "–"}
+              </span>
+              {/* Status + Doorman */}
+              <div className="flex items-center gap-2">
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                  log.exit_time
+                    ? "bg-muted text-muted-foreground"
+                    : "bg-warning/20 text-warning"
+                }`}>
+                  {log.exit_time ? "OK" : "ATIVO"}
+                </span>
+                <DoormanTag userId={log.created_by} />
+              </div>
+            </button>
+          ))}
         </div>
       )}
 
