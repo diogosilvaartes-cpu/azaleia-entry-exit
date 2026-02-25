@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import AppLayout from "@/components/AppLayout";
-import { PlusCircle, ArrowUpRight, LogIn, LogOut as LogOutIcon, User } from "lucide-react";
-import { useActiveEntries, useTodayStats, useRegisterExit } from "@/hooks/useAccessLogs";
+import { PlusCircle, ArrowUpRight, LogOut as LogOutIcon, User, Search } from "lucide-react";
+import { useActiveEntries, useRegisterExit, useHistoryLogs } from "@/hooks/useAccessLogs";
 import { useResidents } from "@/hooks/useResidents";
 import { useToast } from "@/hooks/use-toast";
 import PlateBadge from "@/components/PlateBadge";
 import AccessLogSheet from "@/components/AccessLogSheet";
+import DoormanTag from "@/components/DoormanTag";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader,
@@ -18,11 +19,15 @@ const formatTime = (iso: string) =>
   new Date(iso).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
 const Dashboard = () => {
-  const { data: stats } = useTodayStats();
   const { data: active, isLoading: activeLoading } = useActiveEntries();
   const { data: residents } = useResidents();
   const registerExit = useRegisterExit();
   const { toast } = useToast();
+
+  // Today's history
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const { data: todayLogs } = useHistoryLogs({ dateFrom: today.toISOString() });
 
   const [selectedLog, setSelectedLog] = useState<AccessLog | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -43,6 +48,20 @@ const Dashboard = () => {
       r.name.toLowerCase() === name.toLowerCase() ||
       (plate && r.plate && r.plate.toLowerCase() === plate.toLowerCase())
     );
+
+  // Filter active entries to only visitors (not residents)
+  const activeVisitors = useMemo(() => {
+    if (!active || !residents) return active || [];
+    const residentNames = new Set(residents.map(r => r.name.toLowerCase()));
+    const residentPlates = new Set(
+      residents.filter(r => r.plate).map(r => r.plate!.toLowerCase())
+    );
+    return active.filter(log => {
+      const isResident = residentNames.has(log.driver_name.toLowerCase()) ||
+        (log.plate && residentPlates.has(log.plate.toLowerCase()));
+      return !isResident;
+    });
+  }, [active, residents]);
 
   const openSheet = (log: AccessLog) => {
     setSelectedLog(log);
@@ -77,25 +96,24 @@ const Dashboard = () => {
         </Link>
       </div>
 
-      {/* Active Entries */}
+      {/* Active Visitors Only */}
       <div className="mb-8">
         <h2 className="text-lg font-extrabold text-foreground mb-3 tracking-tight">
-          Ativos Agora {active?.length ? `(${active.length})` : ""}
+          Visitantes Ativos {activeVisitors.length ? `(${activeVisitors.length})` : ""}
         </h2>
 
         {activeLoading ? (
           <p className="text-sm font-semibold text-muted-foreground">Carregando...</p>
-        ) : !active?.length ? (
+        ) : !activeVisitors.length ? (
           <div className="apple-card p-8 text-center">
-            <p className="text-sm font-semibold text-muted-foreground">Nenhuma entrada ativa no momento.</p>
+            <p className="text-sm font-semibold text-muted-foreground">Nenhum visitante ativo no momento.</p>
           </div>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2">
-            {active.map((log) => {
+            {activeVisitors.map((log) => {
               const resident = findResident(log.driver_name, log.plate);
               return (
                 <div key={log.id} className="apple-card p-4 flex items-center gap-4 transition-all hover:shadow-md">
-                  {/* Photo */}
                   <button onClick={() => openSheet(log)} className="shrink-0">
                     {resident?.photo_url ? (
                       <img src={resident.photo_url} alt={log.driver_name} className="h-14 w-14 rounded-full object-cover border-2 border-primary/30 shadow" />
@@ -107,7 +125,6 @@ const Dashboard = () => {
                   </button>
 
                   <button onClick={() => openSheet(log)} className="flex-1 min-w-0 text-left">
-                    {/* Destination HUGE */}
                     <p className="text-3xl font-black text-foreground leading-none">{log.destination}</p>
                     <p className="text-base font-bold text-foreground/80 mt-1 uppercase truncate">{log.driver_name}</p>
                     {log.plate && (
@@ -115,10 +132,12 @@ const Dashboard = () => {
                         <PlateBadge plate={log.plate} size="sm" />
                       </div>
                     )}
-                    <p className="text-xs font-semibold text-muted-foreground mt-1">{formatTime(log.entry_time)}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <p className="text-xs font-semibold text-muted-foreground">{formatTime(log.entry_time)}</p>
+                      <DoormanTag userId={log.created_by} />
+                    </div>
                   </button>
 
-                  {/* Quick exit button */}
                   <button
                     onClick={() => setExitTarget(log)}
                     className="shrink-0 h-12 w-12 rounded-xl bg-success/15 flex items-center justify-center hover:bg-success/25 transition-colors"
@@ -132,26 +151,42 @@ const Dashboard = () => {
         )}
       </div>
 
-      {/* Stats at bottom */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="apple-card p-5 flex items-center gap-4">
-          <div className="h-12 w-12 rounded-xl bg-primary/15 flex items-center justify-center">
-            <LogIn className="h-6 w-6 text-primary" />
+      {/* Today's History (replaces stats) */}
+      <div>
+        <h2 className="text-lg font-extrabold text-foreground mb-3 tracking-tight">
+          Histórico de Hoje {todayLogs?.length ? `(${todayLogs.length})` : ""}
+        </h2>
+
+        {!todayLogs?.length ? (
+          <div className="apple-card p-8 text-center">
+            <p className="text-sm font-semibold text-muted-foreground">Nenhum registro hoje.</p>
           </div>
-          <div>
-            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Entradas Hoje</p>
-            <p className="text-3xl font-black text-foreground">{stats?.entries ?? 0}</p>
+        ) : (
+          <div className="space-y-1">
+            {todayLogs.map((log) => (
+              <button
+                key={log.id}
+                onClick={() => openSheet(log)}
+                className="w-full text-left rounded-xl bg-card border border-border px-4 py-2.5 flex items-center gap-3 transition-all hover:bg-accent/50 active:scale-[0.995] cursor-pointer"
+              >
+                <span className="text-sm font-extrabold text-foreground w-12 shrink-0">
+                  {formatTime(log.entry_time)}
+                </span>
+                <span className="text-lg font-black text-foreground w-12 shrink-0">{log.destination}</span>
+                <span className="text-sm font-bold text-foreground/80 uppercase truncate flex-1">{log.driver_name}</span>
+                {log.plate && <PlateBadge plate={log.plate} size="sm" />}
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${
+                  log.exit_time
+                    ? "bg-muted text-muted-foreground"
+                    : "bg-warning/20 text-warning"
+                }`}>
+                  {log.exit_time ? `↑${new Date(log.exit_time).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}` : "ATIVO"}
+                </span>
+                <DoormanTag userId={log.created_by} />
+              </button>
+            ))}
           </div>
-        </div>
-        <div className="apple-card p-5 flex items-center gap-4">
-          <div className="h-12 w-12 rounded-xl bg-success/15 flex items-center justify-center">
-            <LogOutIcon className="h-6 w-6 text-success" />
-          </div>
-          <div>
-            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Saídas Hoje</p>
-            <p className="text-3xl font-black text-foreground">{stats?.exits ?? 0}</p>
-          </div>
-        </div>
+        )}
       </div>
 
       {/* Detail Sheet */}
