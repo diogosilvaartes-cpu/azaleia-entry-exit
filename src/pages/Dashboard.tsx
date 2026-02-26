@@ -67,7 +67,7 @@ const Dashboard = () => {
   };
 
   return (
-    <AppLayout>
+    <AppLayout pageId="dashboard">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-extrabold text-foreground tracking-tight">Residencial Azaleia</h1>

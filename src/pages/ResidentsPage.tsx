@@ -109,7 +109,7 @@ const ResidentsPage = () => {
   const cancelForm = () => { setShowForm(false); setEditingId(null); setForm(emptyForm); };
 
   return (
-    <AppLayout>
+    <AppLayout pageId="residents">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-extrabold text-foreground tracking-tight">Cadastros</h1>

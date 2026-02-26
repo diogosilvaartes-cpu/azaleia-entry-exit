@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Send } from "lucide-react";
 import { useAllShiftNotes, useCreateShiftNote } from "@/hooks/useShiftNotes";
 import { useToast } from "@/hooks/use-toast";
+import DoormanTag from "@/components/DoormanTag";
 
 const OccurrencesPage = () => {
   const { data: notes, isLoading } = useAllShiftNotes();
@@ -36,7 +37,7 @@ const OccurrencesPage = () => {
   const sortedDates = Object.keys(grouped).sort((a, b) => b.localeCompare(a));
 
   return (
-    <AppLayout>
+    <AppLayout pageId="occurrences">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-foreground">Livro de Ocorrências</h1>
         <p className="text-sm text-muted-foreground">Registro de observações e eventos</p>
@@ -81,7 +82,10 @@ const OccurrencesPage = () => {
                 {grouped[date]!.map((note) => (
                   <div key={note.id} className="apple-card p-4 animate-fade-in">
                     <p className="text-sm text-foreground whitespace-pre-wrap">{note.content}</p>
-                    <p className="text-xs text-muted-foreground mt-2">{formatTime(note.created_at)}</p>
+                    <div className="flex items-center gap-2 mt-2">
+                      <p className="text-xs text-muted-foreground">{formatTime(note.created_at)}</p>
+                      <DoormanTag userId={note.created_by} />
+                    </div>
                   </div>
                 ))}
               </div>
