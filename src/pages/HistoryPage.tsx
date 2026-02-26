@@ -62,7 +62,6 @@ const HistoryPage = () => {
     );
   }, [data, search]);
 
-  // Group by date
   const grouped = useMemo(() => {
     const map = new Map<string, AccessLog[]>();
     for (const log of filtered) {
@@ -80,7 +79,7 @@ const HistoryPage = () => {
     );
 
   return (
-    <AppLayout>
+    <AppLayout pageId="history">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-extrabold text-foreground tracking-tight">Histórico</h1>
         <div className="flex gap-2 no-print">
@@ -125,14 +124,14 @@ const HistoryPage = () => {
           {grouped.map(([dateKey, logs]) => (
             <div key={dateKey}>
               {/* Date group header */}
-              <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm py-2 mb-1">
+              <div className="sticky top-14 z-10 bg-background/95 backdrop-blur-sm py-2 mb-1">
                 <span className="text-xs font-extrabold text-muted-foreground uppercase tracking-wider">
                   {fmtGroupDate(logs[0].entry_time)}
                 </span>
               </div>
 
-              {/* Column header */}
-              <div className="hidden sm:grid grid-cols-[50px_90px_1fr_70px_90px_60px_auto] gap-2 px-4 py-1.5 text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">
+              {/* Desktop table header */}
+              <div className="hidden md:grid grid-cols-[56px_100px_1fr_80px_100px_56px_80px] gap-3 px-4 py-1.5 text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">
                 <span>Hora</span>
                 <span>Placa</span>
                 <span>Nome</span>
@@ -143,34 +142,66 @@ const HistoryPage = () => {
               </div>
 
               {/* Rows */}
-              <div className="space-y-0.5">
+              <div className="space-y-1">
                 {logs.map((log) => (
                   <button
                     key={log.id}
                     onClick={() => { setSelectedLog(log); setSheetOpen(true); }}
-                    className="w-full text-left rounded-lg bg-card border border-border px-4 py-2 flex flex-col sm:grid sm:grid-cols-[50px_90px_1fr_70px_90px_60px_auto] sm:items-center gap-1 sm:gap-2 transition-all hover:bg-accent/50 active:scale-[0.998] cursor-pointer"
+                    className="w-full text-left rounded-xl bg-card border border-border px-4 py-3 transition-all hover:bg-accent/50 active:scale-[0.998] cursor-pointer"
                   >
-                    <span className="text-sm font-extrabold text-foreground">
-                      {fmt(log.entry_time, "time")}
-                    </span>
-                    <span>
-                      {log.plate ? <PlateBadge plate={log.plate} size="sm" /> : <span className="text-xs text-muted-foreground">–</span>}
-                    </span>
-                    <span className="text-sm font-bold text-foreground truncate uppercase">{log.driver_name}</span>
-                    <span className="text-sm font-black text-foreground">{log.destination}</span>
-                    <span className="text-xs font-semibold text-muted-foreground truncate">{log.authorized_by || "–"}</span>
-                    <span className="text-sm font-bold text-foreground">
-                      {log.exit_time ? fmt(log.exit_time, "time") : "–"}
-                    </span>
-                    <div className="flex items-center gap-1.5">
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                        log.exit_time
-                          ? "bg-muted text-muted-foreground"
-                          : "bg-warning/20 text-warning"
-                      }`}>
-                        {log.exit_time ? "OK" : "ATIVO"}
+                    {/* Desktop row */}
+                    <div className="hidden md:grid grid-cols-[56px_100px_1fr_80px_100px_56px_80px] gap-3 items-center">
+                      <span className="text-sm font-extrabold text-foreground">
+                        {fmt(log.entry_time, "time")}
                       </span>
-                      <DoormanTag userId={log.created_by} />
+                      <span>
+                        {log.plate ? <PlateBadge plate={log.plate} size="sm" /> : <span className="text-xs text-muted-foreground">–</span>}
+                      </span>
+                      <span className="text-sm font-bold text-foreground truncate uppercase">{log.driver_name}</span>
+                      <span className="text-sm font-black text-foreground">{log.destination}</span>
+                      <span className="text-xs font-semibold text-muted-foreground truncate">{log.authorized_by || "–"}</span>
+                      <span className="text-sm font-bold text-foreground">
+                        {log.exit_time ? fmt(log.exit_time, "time") : "–"}
+                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                          log.exit_time
+                            ? "bg-muted text-muted-foreground"
+                            : "bg-warning/20 text-warning"
+                        }`}>
+                          {log.exit_time ? "OK" : "ATIVO"}
+                        </span>
+                        <DoormanTag userId={log.created_by} />
+                      </div>
+                    </div>
+
+                    {/* Mobile row */}
+                    <div className="md:hidden flex flex-col gap-1.5">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-extrabold text-foreground">{fmt(log.entry_time, "time")}</span>
+                          <span className="text-lg font-black text-foreground">{log.destination}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                            log.exit_time
+                              ? "bg-muted text-muted-foreground"
+                              : "bg-warning/20 text-warning"
+                          }`}>
+                            {log.exit_time ? `↑${fmt(log.exit_time, "time")}` : "ATIVO"}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-bold text-foreground uppercase truncate">{log.driver_name}</span>
+                        {log.plate && <PlateBadge plate={log.plate} size="sm" />}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {log.authorized_by && (
+                          <span className="text-xs text-muted-foreground">lib: {log.authorized_by}</span>
+                        )}
+                        <DoormanTag userId={log.created_by} />
+                      </div>
                     </div>
                   </button>
                 ))}

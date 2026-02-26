@@ -11,36 +11,62 @@ const navItems = [
   { to: "/residents", label: "Cadastros", icon: Users },
 ];
 
-const AppLayout = ({ children }: { children: ReactNode }) => {
+const PAGE_BG: Record<string, string> = {
+  dashboard: "bg-background",
+  history: "bg-[hsl(220_14%_90%)]",
+  occurrences: "bg-[hsl(200_12%_91%)]",
+  residents: "bg-[hsl(210_10%_91%)]",
+};
+
+interface Props {
+  children: ReactNode;
+  pageId?: string;
+}
+
+const AppLayout = ({ children, pageId }: Props) => {
   const { signOut, user } = useAuth();
   const location = useLocation();
 
+  const resolvedPageId =
+    pageId ||
+    (location.pathname === "/dashboard"
+      ? "dashboard"
+      : location.pathname === "/history"
+      ? "history"
+      : location.pathname === "/occurrences"
+      ? "occurrences"
+      : location.pathname === "/residents"
+      ? "residents"
+      : "dashboard");
+
+  const pageBg = PAGE_BG[resolvedPageId] || PAGE_BG.dashboard;
+
   return (
-    <div className="min-h-screen bg-background">
-      {/* Top nav bar - minimal pill style */}
-      <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl no-print">
-        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
+    <div className={`min-h-screen transition-colors duration-300 ${pageBg}`}>
+      {/* Top nav bar */}
+      <header className="sticky top-0 z-40 bg-card/90 backdrop-blur-xl border-b border-border no-print">
+        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4">
           <div className="flex items-center gap-2">
-            <span className="hidden text-xs text-muted-foreground sm:inline">
+            <span className="hidden text-xs font-semibold text-muted-foreground sm:inline">
               {user?.email || "Portaria"}
             </span>
             <Button
               variant="ghost"
               size="sm"
               onClick={signOut}
-              className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
+              className="h-9 w-9 p-0 text-muted-foreground hover:text-foreground"
             >
               <LogOut className="h-4 w-4" />
             </Button>
           </div>
 
-          <nav className="flex items-center rounded-full bg-secondary p-1 gap-0.5">
+          <nav className="flex items-center rounded-2xl bg-secondary p-1.5 gap-1 shadow-sm">
             {navItems.map(({ to, label, icon: Icon }) => {
               const isActive = location.pathname === to;
               return (
                 <Link key={to} to={to}>
                   <button
-                    className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-all ${
+                    className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-bold transition-all ${
                       isActive
                         ? "bg-card text-foreground shadow-sm"
                         : "text-muted-foreground hover:text-foreground"
@@ -54,7 +80,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
             })}
           </nav>
 
-          <div className="w-20" /> {/* Spacer for balance */}
+          <div className="w-20" />
         </div>
       </header>
 
