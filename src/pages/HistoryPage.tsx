@@ -131,7 +131,7 @@ const HistoryPage = () => {
               </div>
 
               {/* Desktop table header */}
-              <div className="hidden md:grid grid-cols-[56px_100px_1fr_80px_100px_56px_80px] gap-3 px-4 py-1.5 text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">
+              <div className="hidden md:grid grid-cols-[56px_120px_1fr_70px_100px_56px_auto] gap-4 px-4 py-1.5 text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">
                 <span>Hora</span>
                 <span>Placa</span>
                 <span>Nome</span>
@@ -150,7 +150,7 @@ const HistoryPage = () => {
                     className="w-full text-left rounded-xl bg-card border border-border px-4 py-3 transition-all hover:bg-accent/50 active:scale-[0.998] cursor-pointer"
                   >
                     {/* Desktop row */}
-                    <div className="hidden md:grid grid-cols-[56px_100px_1fr_80px_100px_56px_80px] gap-3 items-center">
+                    <div className="hidden md:grid grid-cols-[56px_120px_1fr_70px_100px_56px_auto] gap-4 items-center">
                       <span className="text-sm font-extrabold text-foreground">
                         {fmt(log.entry_time, "time")}
                       </span>
