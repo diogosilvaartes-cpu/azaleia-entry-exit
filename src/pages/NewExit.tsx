@@ -2,7 +2,8 @@ import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import AppLayout from "@/components/AppLayout";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, Search, User, ChevronRight, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, Search, User, ChevronRight } from "lucide-react";
 import { useActiveEntries, useRegisterExit, useCreateStandaloneExit } from "@/hooks/useAccessLogs";
 import { useResidents } from "@/hooks/useResidents";
 import { useToast } from "@/hooks/use-toast";
@@ -25,6 +26,9 @@ const NewExit = () => {
   const { toast } = useToast();
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState<"moradores" | "visitantes">("moradores");
+  const [manualName, setManualName] = useState("");
+  const [manualPlate, setManualPlate] = useState("");
+  const [manualDestination, setManualDestination] = useState("");
 
   const filtered = useMemo(() => {
     if (!active) return [];
@@ -80,6 +84,28 @@ const NewExit = () => {
         car_color: resident.car_color || undefined,
       });
       toast({ title: `Saída registrada: ${resident.name}` });
+      navigate("/dashboard");
+    } catch {
+      toast({ title: "Erro ao registrar saída", variant: "destructive" });
+    }
+  };
+
+  const handleManualStandaloneExit = async () => {
+    if (!manualName.trim()) {
+      toast({ title: "Informe o nome para registrar a saída.", variant: "destructive" });
+      return;
+    }
+
+    try {
+      await createStandaloneExit.mutateAsync({
+        driver_name: manualName.trim(),
+        plate: manualPlate.trim() || undefined,
+        destination: manualDestination.trim() || "Saída avulsa",
+      });
+      toast({ title: `Saída registrada: ${manualName.trim()}` });
+      setManualName("");
+      setManualPlate("");
+      setManualDestination("");
       navigate("/dashboard");
     } catch {
       toast({ title: "Erro ao registrar saída", variant: "destructive" });
@@ -187,6 +213,37 @@ const NewExit = () => {
             )}
           </div>
         )}
+
+        {/* Saída avulsa manual */}
+        <div className="apple-card p-4 mb-6 space-y-3">
+          <h2 className="text-sm font-extrabold text-foreground uppercase tracking-wide">Saída avulsa manual</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <Input
+              placeholder="Nome (obrigatório)"
+              value={manualName}
+              onChange={(e) => setManualName(e.target.value)}
+              className="h-11"
+            />
+            <Input
+              placeholder="Placa (opcional)"
+              value={manualPlate}
+              onChange={(e) => setManualPlate(e.target.value.toUpperCase())}
+              className="h-11"
+            />
+            <Input
+              placeholder="Destino/Casa (opcional)"
+              value={manualDestination}
+              onChange={(e) => setManualDestination(e.target.value)}
+              className="h-11"
+            />
+          </div>
+          <Button
+            onClick={handleManualStandaloneExit}
+            className="w-full md:w-auto bg-success hover:bg-success/90 text-success-foreground font-extrabold"
+          >
+            Registrar saída manual
+          </Button>
+        </div>
 
         {/* Tab buttons */}
         <div className="flex gap-2 mb-4">
