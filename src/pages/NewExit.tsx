@@ -48,6 +48,17 @@ const NewExit = () => {
     );
   }, [residents, search]);
 
+  const filteredVisitors = useMemo(() => {
+    const list = (residents || []).filter(r => r.type !== "morador");
+    if (!search.trim()) return list;
+    const q = search.toLowerCase();
+    return list.filter(r =>
+      r.name.toLowerCase().includes(q) ||
+      (r.plate && r.plate.toLowerCase().includes(q)) ||
+      (r.unit && r.unit.toLowerCase().includes(q))
+    );
+  }, [residents, search]);
+
   const handleExit = async (id: string) => {
     try {
       await registerExit.mutateAsync(id);
@@ -239,7 +250,68 @@ const NewExit = () => {
                 </AlertDialog>
               ))
             )}
+        </div>
+
+        {/* VISITANTES - standalone exit */}
+        <div className="mt-8">
+          <h2 className="text-lg font-extrabold text-foreground mb-3 tracking-tight">VISITANTES</h2>
+          <div className="space-y-3">
+            {filteredVisitors.length === 0 ? (
+              <div className="apple-card p-6 text-center">
+                <p className="text-muted-foreground font-semibold">Nenhum visitante encontrado.</p>
+              </div>
+            ) : (
+              filteredVisitors.map((r) => (
+                <AlertDialog key={r.id}>
+                  <AlertDialogTrigger asChild>
+                    <button
+                      className="apple-card p-4 w-full text-left flex items-center gap-4 transition-all hover:shadow-md active:scale-[0.99] cursor-pointer"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <p className="font-extrabold text-lg text-foreground uppercase truncate">{r.name}</p>
+                        {r.plate && (
+                          <div className="mt-1">
+                            <PlateBadge plate={r.plate} size="sm" />
+                          </div>
+                        )}
+                        {r.unit && (
+                          <p className="text-xs font-semibold text-muted-foreground mt-1">Casa {r.unit}</p>
+                        )}
+                      </div>
+                      <div className="shrink-0">
+                        {r.photo_url ? (
+                          <img src={r.photo_url} alt={r.name} className="h-14 w-14 rounded-full object-cover border-2 border-accent/30 shadow" />
+                        ) : (
+                          <div className="h-14 w-14 rounded-full bg-accent/15 flex items-center justify-center">
+                            <User className="h-7 w-7 text-accent" />
+                          </div>
+                        )}
+                      </div>
+                    </button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle className="text-xl font-extrabold">Registrar saída avulsa</AlertDialogTitle>
+                      <AlertDialogDescription className="text-base">
+                        Registrar saída de <strong className="text-foreground">{r.name}</strong>
+                        {r.plate ? ` (${r.plate})` : ""}?
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel className="font-bold">Cancelar</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => handleStandaloneExit(r)}
+                        className="bg-success hover:bg-success/90 font-extrabold text-base"
+                      >
+                        CONFIRMAR SAÍDA
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              ))
+            )}
           </div>
+        </div>
         </div>
       </div>
     </AppLayout>
