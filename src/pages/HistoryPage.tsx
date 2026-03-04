@@ -130,53 +130,64 @@ const HistoryPage = () => {
                 </span>
               </div>
 
-              {/* Desktop table header */}
-              <div className="hidden md:grid grid-cols-[56px_120px_1fr_70px_100px_56px_auto] gap-4 px-4 py-1.5 text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">
-                <span>Hora</span>
-                <span>Placa</span>
-                <span>Nome</span>
-                <span>Destino</span>
-                <span>Liberado</span>
-                <span>Saída</span>
-                <span>Status</span>
-              </div>
+              {/* Desktop table */}
+              <table className="hidden md:table w-full border-separate border-spacing-y-1">
+                <thead>
+                  <tr className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">
+                    <th className="text-left px-3 py-1.5 w-[56px]">Hora</th>
+                    <th className="text-left px-3 py-1.5 w-[120px]">Placa</th>
+                    <th className="text-left px-3 py-1.5">Nome</th>
+                    <th className="text-left px-3 py-1.5 w-[70px]">Destino</th>
+                    <th className="text-left px-3 py-1.5 w-[100px]">Liberado</th>
+                    <th className="text-left px-3 py-1.5 w-[56px]">Saída</th>
+                    <th className="text-left px-3 py-1.5 w-[100px]">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {logs.map((log) => (
+                    <tr
+                      key={log.id}
+                      onClick={() => { setSelectedLog(log); setSheetOpen(true); }}
+                      className="bg-card border border-border rounded-xl cursor-pointer transition-all hover:bg-accent/50 active:scale-[0.998]"
+                    >
+                      <td className="px-3 py-3 text-sm font-extrabold text-foreground rounded-l-xl">
+                        {fmt(log.entry_time, "time")}
+                      </td>
+                      <td className="px-3 py-3">
+                        {log.plate ? <PlateBadge plate={log.plate} size="sm" /> : <span className="text-xs text-muted-foreground">–</span>}
+                      </td>
+                      <td className="px-3 py-3 text-sm font-bold text-foreground truncate uppercase max-w-0">{log.driver_name}</td>
+                      <td className="px-3 py-3 text-sm font-black text-foreground">{log.destination}</td>
+                      <td className="px-3 py-3 text-xs font-semibold text-muted-foreground truncate max-w-0">{log.authorized_by || "–"}</td>
+                      <td className="px-3 py-3 text-sm font-bold text-foreground">
+                        {log.exit_time ? fmt(log.exit_time, "time") : "–"}
+                      </td>
+                      <td className="px-3 py-3 rounded-r-xl">
+                        <div className="flex items-center gap-1.5">
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                            log.exit_time
+                              ? "bg-muted text-muted-foreground"
+                              : "bg-warning/20 text-warning"
+                          }`}>
+                            {log.exit_time ? "OK" : "ATIVO"}
+                          </span>
+                          <DoormanTag userId={log.created_by} />
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
 
-              {/* Rows */}
-              <div className="space-y-1">
+              {/* Mobile rows */}
+              <div className="md:hidden space-y-1">
                 {logs.map((log) => (
                   <button
                     key={log.id}
                     onClick={() => { setSelectedLog(log); setSheetOpen(true); }}
                     className="w-full text-left rounded-xl bg-card border border-border px-4 py-3 transition-all hover:bg-accent/50 active:scale-[0.998] cursor-pointer"
                   >
-                    {/* Desktop row */}
-                    <div className="hidden md:grid grid-cols-[56px_120px_1fr_70px_100px_56px_auto] gap-4 items-center">
-                      <span className="text-sm font-extrabold text-foreground">
-                        {fmt(log.entry_time, "time")}
-                      </span>
-                      <span>
-                        {log.plate ? <PlateBadge plate={log.plate} size="sm" /> : <span className="text-xs text-muted-foreground">–</span>}
-                      </span>
-                      <span className="text-sm font-bold text-foreground truncate uppercase">{log.driver_name}</span>
-                      <span className="text-sm font-black text-foreground">{log.destination}</span>
-                      <span className="text-xs font-semibold text-muted-foreground truncate">{log.authorized_by || "–"}</span>
-                      <span className="text-sm font-bold text-foreground">
-                        {log.exit_time ? fmt(log.exit_time, "time") : "–"}
-                      </span>
-                      <div className="flex items-center gap-1.5">
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                          log.exit_time
-                            ? "bg-muted text-muted-foreground"
-                            : "bg-warning/20 text-warning"
-                        }`}>
-                          {log.exit_time ? "OK" : "ATIVO"}
-                        </span>
-                        <DoormanTag userId={log.created_by} />
-                      </div>
-                    </div>
-
-                    {/* Mobile row */}
-                    <div className="md:hidden flex flex-col gap-1.5">
+                    <div className="flex flex-col gap-1.5">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-extrabold text-foreground">{fmt(log.entry_time, "time")}</span>
