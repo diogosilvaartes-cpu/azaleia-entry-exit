@@ -13,6 +13,8 @@ export function useResidents() {
       if (error) throw error;
       return data as Resident[];
     },
+    refetchOnWindowFocus: true,
+    refetchInterval: 15000,
   });
 }
 
