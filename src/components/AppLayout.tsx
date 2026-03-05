@@ -14,9 +14,9 @@ const navItems = [
 
 const PAGE_BG: Record<string, string> = {
   dashboard: "bg-background",
-  history: "bg-[hsl(220_14%_90%)]",
-  occurrences: "bg-[hsl(200_12%_91%)]",
-  residents: "bg-[hsl(210_10%_91%)]",
+  history: "bg-[hsl(220_14%_90%)] dark:bg-background",
+  occurrences: "bg-[hsl(200_12%_91%)] dark:bg-background",
+  residents: "bg-[hsl(210_10%_91%)] dark:bg-background",
 };
 
 interface Props {
