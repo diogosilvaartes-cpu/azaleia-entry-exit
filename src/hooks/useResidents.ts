@@ -9,7 +9,7 @@ export function useResidents() {
       const { data, error } = await supabase
         .from("residents")
         .select("*")
-        .order("name");
+        .order("unit");
       if (error) throw error;
       return data as Resident[];
     },
