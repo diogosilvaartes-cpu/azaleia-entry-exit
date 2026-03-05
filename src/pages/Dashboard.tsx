@@ -174,44 +174,68 @@ const Dashboard = () => {
             {todayLogs.map((log) => (
               <div
                 key={log.id}
-                className="w-full rounded-xl bg-card border border-border px-4 py-2.5 flex items-center gap-3 transition-all hover:bg-accent/50"
+                className="w-full rounded-xl bg-card border border-border px-4 py-2.5 transition-all hover:bg-accent/50"
               >
-                <button onClick={() => openSheet(log)} className="flex-1 min-w-0 flex items-center gap-3 text-left">
-                  <span className="text-sm font-extrabold text-foreground w-12 shrink-0">
-                    {formatTime(log.entry_time)}
-                  </span>
-                  <span className="text-lg font-black text-foreground w-12 shrink-0">{log.destination}</span>
-                  <span className="text-sm font-bold text-foreground/80 uppercase truncate flex-1">{log.driver_name}</span>
-                  {log.plate && <PlateBadge plate={log.plate} size="sm" />}
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${
-                    log.exit_time
-                      ? "bg-muted text-muted-foreground"
-                      : "bg-warning/20 text-warning"
-                  }`}>
-                    {log.exit_time ? `↑${new Date(log.exit_time).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}` : "ATIVO"}
-                  </span>
-                  <DoormanTag userId={log.created_by} />
-                </button>
-
-                {/* Action buttons */}
-                <div className="shrink-0 flex items-center gap-1.5">
-                  {!log.exit_time && (
-                    <button
-                      onClick={() => setExitTarget(log)}
-                      className="h-8 w-8 rounded-lg bg-success/15 flex items-center justify-center hover:bg-success/25 transition-colors"
-                      title="Dar saída"
-                    >
-                      <LogOutIcon className="h-4 w-4 text-success" />
-                    </button>
-                  )}
-                  <button
-                    onClick={() => openSheet(log)}
-                    className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center hover:bg-primary/20 transition-colors"
-                    title="Editar"
-                  >
-                    <Pencil className="h-3.5 w-3.5 text-primary" />
+                {/* Desktop: single row */}
+                <div className="hidden sm:flex items-center gap-3">
+                  <button onClick={() => openSheet(log)} className="flex-1 min-w-0 flex items-center gap-3 text-left">
+                    <span className="text-sm font-extrabold text-foreground w-12 shrink-0">
+                      {formatTime(log.entry_time)}
+                    </span>
+                    <span className="text-lg font-black text-foreground w-12 shrink-0">{log.destination}</span>
+                    <span className="text-sm font-bold text-foreground/80 uppercase truncate flex-1">{log.driver_name}</span>
+                    {log.plate && <PlateBadge plate={log.plate} size="sm" />}
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${
+                      log.exit_time
+                        ? "bg-muted text-muted-foreground"
+                        : "bg-warning/20 text-warning"
+                    }`}>
+                      {log.exit_time ? `↑${new Date(log.exit_time).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}` : "ATIVO"}
+                    </span>
+                    <DoormanTag userId={log.created_by} />
                   </button>
+                  <div className="shrink-0 flex items-center gap-1.5">
+                    {!log.exit_time && (
+                      <button onClick={() => setExitTarget(log)} className="h-8 w-8 rounded-lg bg-success/15 flex items-center justify-center hover:bg-success/25 transition-colors" title="Dar saída">
+                        <LogOutIcon className="h-4 w-4 text-success" />
+                      </button>
+                    )}
+                    <button onClick={() => openSheet(log)} className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center hover:bg-primary/20 transition-colors" title="Editar">
+                      <Pencil className="h-3.5 w-3.5 text-primary" />
+                    </button>
+                  </div>
                 </div>
+
+                {/* Mobile: stacked layout */}
+                <button onClick={() => openSheet(log)} className="sm:hidden w-full text-left">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-extrabold text-foreground">{formatTime(log.entry_time)}</span>
+                      <span className="text-lg font-black text-foreground">{log.destination}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                        log.exit_time
+                          ? "bg-muted text-muted-foreground"
+                          : "bg-warning/20 text-warning"
+                      }`}>
+                        {log.exit_time ? `↑${new Date(log.exit_time).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}` : "ATIVO"}
+                      </span>
+                      {!log.exit_time && (
+                        <button onClick={(e) => { e.stopPropagation(); setExitTarget(log); }} className="h-7 w-7 rounded-lg bg-success/15 flex items-center justify-center" title="Dar saída">
+                          <LogOutIcon className="h-3.5 w-3.5 text-success" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-sm font-bold text-foreground/80 uppercase truncate">{log.driver_name}</span>
+                    {log.plate && <PlateBadge plate={log.plate} size="sm" />}
+                  </div>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <DoormanTag userId={log.created_by} />
+                  </div>
+                </button>
               </div>
             ))}
           </div>
