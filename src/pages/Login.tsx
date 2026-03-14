@@ -58,7 +58,7 @@ const Login = () => {
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 hover:scale-105"
         style={{ backgroundImage: `url(${loginBg})` }} />
 
-      <div className="absolute inset-0 z-0 bg-foreground/40" />
+      <div className="absolute inset-0 z-0 bg-foreground/40 opacity-0" />
 
       <div className="relative z-10 w-full max-w-md animate-fade-in rounded-2xl bg-black/50 backdrop-blur-md p-6">
         <div className="mb-6 text-center">
@@ -139,8 +139,8 @@ const Login = () => {
                 } finally {
                   setLoading(false);
                 }
-              }}
-            >
+              }}>
+              
               <UserRound className="mr-2 h-5 w-5" />
               Entrar sem E-mail
             </Button>
