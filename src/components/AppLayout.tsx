@@ -14,9 +14,9 @@ const navItems = [
 
 const PAGE_BG: Record<string, string> = {
   dashboard: "bg-background",
-  history: "bg-[hsl(220_14%_90%)] dark:bg-background",
-  occurrences: "bg-[hsl(200_12%_91%)] dark:bg-background",
-  residents: "bg-[hsl(210_10%_91%)] dark:bg-background",
+  history: "bg-background",
+  occurrences: "bg-background",
+  residents: "bg-background",
 };
 
 interface Props {
@@ -45,47 +45,47 @@ const AppLayout = ({ children, pageId }: Props) => {
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${pageBg}`}>
-      {/* Top nav bar */}
-      <header className="sticky top-0 z-40 bg-card/90 backdrop-blur-xl border-b border-border no-print">
-        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4">
-          <div className="flex items-center gap-1.5">
+      {/* Top nav bar — glass effect */}
+      <header className="sticky top-0 z-40 glass no-print">
+        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
+          <div className="flex items-center gap-1">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="h-9 w-9 p-0 text-muted-foreground hover:text-foreground"
+              className="h-8 w-8 p-0 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary"
               title={theme === "dark" ? "Modo claro" : "Modo escuro"}
             >
               {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
-            <span className="hidden text-xs font-semibold text-muted-foreground sm:inline">
+            <span className="hidden text-xs font-medium text-muted-foreground sm:inline ml-1">
               {user?.email || "Portaria"}
             </span>
             <Button
               variant="ghost"
               size="sm"
               onClick={signOut}
-              className="h-9 w-9 p-0 text-muted-foreground hover:text-foreground"
+              className="h-8 w-8 p-0 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary"
             >
               <LogOut className="h-4 w-4" />
             </Button>
           </div>
 
-          <nav className="flex items-center rounded-2xl bg-secondary p-1.5 gap-1 shadow-sm">
+          <nav className="flex items-center rounded-2xl bg-secondary/80 backdrop-blur-sm p-1 gap-0.5">
             {navItems.map(({ to, label, icon: Icon }) => {
               const isActive = location.pathname === to;
               const isDashboard = to === "/dashboard";
               return (
                 <Link key={to} to={to}>
                   <button
-                    className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-bold transition-all ${
+                    className={`flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-[13px] font-semibold transition-all duration-200 ${
                       isActive
                         ? isDashboard
-                          ? "bg-primary text-primary-foreground shadow-md"
+                          ? "bg-primary text-primary-foreground shadow-md btn-glow"
                           : "bg-card text-foreground shadow-sm"
                         : isDashboard
-                          ? "text-primary font-extrabold hover:bg-primary/10"
-                          : "text-muted-foreground hover:text-foreground"
+                          ? "text-primary font-bold hover:bg-primary/10"
+                          : "text-muted-foreground hover:text-foreground hover:bg-card/50"
                     }`}
                   >
                     <Icon className="h-4 w-4" />

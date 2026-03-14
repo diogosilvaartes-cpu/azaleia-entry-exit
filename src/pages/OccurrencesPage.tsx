@@ -39,8 +39,8 @@ const OccurrencesPage = () => {
   return (
     <AppLayout pageId="occurrences">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Livro de Ocorrências</h1>
-        <p className="text-sm text-muted-foreground">Registro de observações e eventos</p>
+        <h1 className="text-2xl font-extrabold text-foreground tracking-tight">Livro de Ocorrências</h1>
+        <p className="text-sm font-medium text-muted-foreground">Registro de observações e eventos</p>
       </div>
 
       {/* New occurrence */}
@@ -51,13 +51,13 @@ const OccurrencesPage = () => {
             onChange={(e) => setContent(e.target.value)}
             placeholder="Registrar evento ou observação do turno..."
             rows={2}
-            className="flex-1 rounded-xl border-0 bg-secondary resize-none"
+            className="flex-1 rounded-xl border-border/60 bg-secondary/40 resize-none"
           />
           <Button
             type="submit"
             size="sm"
             disabled={createNote.isPending || !content.trim()}
-            className="self-end rounded-full h-10 w-10 p-0"
+            className="self-end rounded-xl h-10 w-10 p-0"
           >
             <Send className="h-4 w-4" />
           </Button>
@@ -66,24 +66,24 @@ const OccurrencesPage = () => {
 
       {/* Notes list */}
       {isLoading ? (
-        <p className="text-sm text-muted-foreground text-center py-8">Carregando...</p>
+        <p className="text-sm text-muted-foreground text-center py-8 font-medium">Carregando...</p>
       ) : !notes?.length ? (
         <div className="apple-card p-8 text-center">
-          <p className="text-sm text-muted-foreground">Nenhuma ocorrência registrada.</p>
+          <p className="text-sm text-muted-foreground font-medium">Nenhuma ocorrência registrada.</p>
         </div>
       ) : (
         <div className="space-y-6">
           {sortedDates.map((date) => (
             <div key={date}>
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 px-1">
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 px-1">
                 {formatDate(date + "T00:00:00")}
               </p>
               <div className="space-y-2">
                 {grouped[date]!.map((note) => (
                   <div key={note.id} className="apple-card p-4 animate-fade-in">
-                    <p className="text-sm text-foreground whitespace-pre-wrap">{note.content}</p>
+                    <p className="text-sm text-foreground whitespace-pre-wrap font-medium leading-relaxed">{note.content}</p>
                     <div className="flex items-center gap-2 mt-2">
-                      <p className="text-xs text-muted-foreground">{formatTime(note.created_at)}</p>
+                      <p className="text-xs text-muted-foreground font-medium">{formatTime(note.created_at)}</p>
                       <DoormanTag userId={note.created_by} />
                     </div>
                   </div>

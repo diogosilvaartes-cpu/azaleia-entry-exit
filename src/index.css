@@ -2,87 +2,95 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap');
 
 @layer base {
   :root {
-    --background: 220 10% 92%;
-    --foreground: 0 0% 8%;
+    --background: 220 14% 93%;
+    --foreground: 220 20% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 8%;
+    --card-foreground: 220 20% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 8%;
+    --popover-foreground: 220 20% 10%;
 
-    --primary: 211 100% 45%;
+    --primary: 217 91% 50%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 10% 88%;
-    --secondary-foreground: 0 0% 8%;
+    --secondary: 220 14% 90%;
+    --secondary-foreground: 220 20% 10%;
 
-    --muted: 220 10% 88%;
-    --muted-foreground: 0 0% 40%;
+    --muted: 220 14% 90%;
+    --muted-foreground: 220 10% 42%;
 
-    --accent: 145 65% 36%;
+    --accent: 152 55% 38%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 48%;
+    --destructive: 0 72% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 8% 82%;
-    --input: 220 8% 82%;
-    --ring: 211 100% 45%;
+    --border: 220 12% 85%;
+    --input: 220 12% 85%;
+    --ring: 217 91% 50%;
 
     --radius: 1rem;
 
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 0 0% 8%;
-    --sidebar-primary: 211 100% 45%;
+    --sidebar-foreground: 220 20% 10%;
+    --sidebar-primary: 217 91% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 10% 92%;
-    --sidebar-accent-foreground: 0 0% 8%;
-    --sidebar-border: 220 8% 82%;
-    --sidebar-ring: 211 100% 45%;
+    --sidebar-accent: 220 14% 93%;
+    --sidebar-accent-foreground: 220 20% 10%;
+    --sidebar-border: 220 12% 85%;
+    --sidebar-ring: 217 91% 50%;
 
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
-    --success: 145 65% 36%;
+    --success: 152 55% 38%;
     --success-foreground: 0 0% 100%;
+
+    --glass: 0 0% 100% / 0.7;
+    --glass-border: 0 0% 100% / 0.5;
+    --shadow-color: 217 91% 50%;
   }
 
   .dark {
-    --background: 220 15% 10%;
-    --foreground: 0 0% 95%;
-    --card: 220 15% 15%;
-    --card-foreground: 0 0% 95%;
-    --popover: 220 15% 15%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 211 100% 50%;
+    --background: 225 20% 7%;
+    --foreground: 220 10% 92%;
+    --card: 225 18% 12%;
+    --card-foreground: 220 10% 92%;
+    --popover: 225 18% 12%;
+    --popover-foreground: 220 10% 92%;
+    --primary: 217 91% 55%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 220 15% 20%;
-    --secondary-foreground: 0 0% 95%;
-    --muted: 220 15% 20%;
-    --muted-foreground: 0 0% 55%;
-    --accent: 145 65% 45%;
+    --secondary: 225 18% 16%;
+    --secondary-foreground: 220 10% 92%;
+    --muted: 225 18% 16%;
+    --muted-foreground: 220 10% 50%;
+    --accent: 152 55% 42%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 62% 30%;
+    --destructive: 0 62% 35%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 15% 22%;
-    --input: 220 15% 22%;
-    --ring: 211 100% 50%;
-    --sidebar-background: 220 15% 8%;
-    --sidebar-foreground: 0 0% 85%;
-    --sidebar-primary: 211 100% 50%;
+    --border: 225 15% 18%;
+    --input: 225 15% 18%;
+    --ring: 217 91% 55%;
+    --sidebar-background: 225 20% 6%;
+    --sidebar-foreground: 220 10% 80%;
+    --sidebar-primary: 217 91% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 15% 15%;
-    --sidebar-accent-foreground: 0 0% 85%;
-    --sidebar-border: 220 15% 18%;
-    --sidebar-ring: 211 100% 50%;
+    --sidebar-accent: 225 18% 14%;
+    --sidebar-accent-foreground: 220 10% 80%;
+    --sidebar-border: 225 15% 15%;
+    --sidebar-ring: 217 91% 55%;
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
-    --success: 145 65% 45%;
+    --success: 152 55% 42%;
     --success-foreground: 0 0% 100%;
+
+    --glass: 225 18% 12% / 0.7;
+    --glass-border: 225 15% 20% / 0.6;
+    --shadow-color: 217 91% 55%;
   }
 }
 
@@ -92,29 +100,67 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.01em;
   }
 }
 
 @layer components {
   /* Brazilian license plate style */
   .plate-badge {
-    @apply inline-flex items-center gap-2 rounded-xl border-[3px] border-foreground/90 bg-card px-4 py-2 font-mono text-2xl font-black tracking-[0.18em] shadow-sm;
+    @apply inline-flex items-center gap-2 rounded-xl border-[3px] border-foreground/90 bg-card px-4 py-2 text-2xl font-black tracking-[0.18em] shadow-sm;
+    font-family: 'JetBrains Mono', monospace;
   }
 
   .plate-badge-sm {
-    @apply inline-flex items-center gap-1.5 rounded-lg border-[2.5px] border-foreground/80 bg-card px-3 py-1.5 font-mono text-lg font-black tracking-[0.15em] shadow-sm;
+    @apply inline-flex items-center gap-1.5 rounded-lg border-[2.5px] border-foreground/80 bg-card px-3 py-1.5 text-lg font-black tracking-[0.15em] shadow-sm;
+    font-family: 'JetBrains Mono', monospace;
   }
 
   .plate-badge-lg {
-    @apply inline-flex items-center gap-2 rounded-xl border-[3px] border-foreground/90 bg-card px-6 py-3 font-mono text-3xl font-black tracking-[0.2em] shadow-md;
+    @apply inline-flex items-center gap-2 rounded-xl border-[3px] border-foreground/90 bg-card px-6 py-3 text-3xl font-black tracking-[0.2em] shadow-md;
+    font-family: 'JetBrains Mono', monospace;
   }
 
-  /* Apple-style card */
+  /* Premium glass card */
   .apple-card {
-    @apply bg-card rounded-2xl shadow-sm border border-border/50;
+    @apply bg-card rounded-2xl border border-border/60;
+    box-shadow:
+      0 1px 3px 0 hsl(var(--foreground) / 0.04),
+      0 4px 16px -2px hsl(var(--foreground) / 0.06);
+  }
+
+  /* Glass effect */
+  .glass {
+    background: hsl(var(--glass));
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid hsl(var(--glass-border));
+  }
+
+  /* Premium button glow */
+  .btn-glow {
+    box-shadow:
+      0 4px 14px -2px hsl(var(--shadow-color) / 0.35),
+      0 1px 4px 0 hsl(var(--shadow-color) / 0.2);
+  }
+
+  .btn-glow-success {
+    box-shadow:
+      0 4px 14px -2px hsl(var(--success) / 0.35),
+      0 1px 4px 0 hsl(var(--success) / 0.2);
+  }
+
+  /* Subtle shimmer for premium sections */
+  .premium-gradient {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--primary) / 0.08) 0%,
+      transparent 50%,
+      hsl(var(--accent) / 0.05) 100%
+    );
   }
 }
 
