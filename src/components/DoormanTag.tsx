@@ -11,7 +11,7 @@ const TAG_COLORS = [
   { bg: "bg-success/10", text: "text-success" },
   { bg: "bg-warning/10", text: "text-warning" },
   { bg: "bg-destructive/10", text: "text-destructive/80" },
-  { bg: "bg-accent", text: "text-accent-foreground" },
+  { bg: "bg-accent/10", text: "text-accent" },
   { bg: "bg-secondary", text: "text-secondary-foreground" },
 ];
 
@@ -41,7 +41,7 @@ const DoormanTag = ({ userId }: Props) => {
   const color = TAG_COLORS[hashUserId(userId)];
 
   return (
-    <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap ${color.bg} ${color.text}`}>
+    <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-md whitespace-nowrap ${color.bg} ${color.text}`}>
       <Shield className="h-2.5 w-2.5" />
       {label}
     </span>
