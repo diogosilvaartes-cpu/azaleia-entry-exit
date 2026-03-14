@@ -82,24 +82,25 @@ const HistoryPage = () => {
     <AppLayout pageId="history">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-extrabold text-foreground tracking-tight">Histórico</h1>
-        <div className="flex gap-2 no-print">
-          <Button variant="ghost" size="sm" onClick={() => filtered.length && exportCSV(filtered)} disabled={!filtered.length} className="text-muted-foreground">
+        <div className="flex gap-1.5 no-print">
+          <Button variant="ghost" size="sm" onClick={() => filtered.length && exportCSV(filtered)} disabled={!filtered.length} className="text-muted-foreground rounded-xl h-9 w-9 p-0">
             <Download className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="sm" onClick={() => window.print()} className="text-muted-foreground">
+          <Button variant="ghost" size="sm" onClick={() => window.print()} className="text-muted-foreground rounded-xl h-9 w-9 p-0">
             <Printer className="h-4 w-4" />
           </Button>
         </div>
       </div>
 
       {/* Search */}
-      <div className="relative mb-4 no-print">
-        <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+      <div className="relative mb-5 no-print">
+        <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           placeholder="Buscar por nome, placa, destino..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="pl-12 h-12 rounded-2xl bg-card border-border shadow-sm text-base font-semibold"
+          className="pl-11 h-12 rounded-2xl bg-card border-border/60 text-base font-medium"
+          style={{ boxShadow: '0 1px 3px 0 hsl(var(--foreground) / 0.04)' }}
         />
       </div>
 
@@ -111,21 +112,20 @@ const HistoryPage = () => {
 
       {/* Content */}
       {isLoading ? (
-        <p className="text-center text-sm font-semibold text-muted-foreground py-8">Carregando...</p>
+        <p className="text-center text-sm font-medium text-muted-foreground py-8">Carregando...</p>
       ) : isError ? (
-        <p className="text-center text-sm font-bold text-destructive py-8">Erro ao carregar dados.</p>
+        <p className="text-center text-sm font-semibold text-destructive py-8">Erro ao carregar dados.</p>
       ) : !filtered.length ? (
         <div className="apple-card p-12 text-center">
-          <Search className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-          <p className="text-sm font-semibold text-muted-foreground">Nenhum registro encontrado.</p>
+          <Search className="mx-auto mb-2 h-8 w-8 text-muted-foreground/40" />
+          <p className="text-sm font-medium text-muted-foreground">Nenhum registro encontrado.</p>
         </div>
       ) : (
         <div className="space-y-6">
           {grouped.map(([dateKey, logs]) => (
             <div key={dateKey}>
-              {/* Date group header */}
-              <div className="sticky top-14 z-10 bg-background/95 backdrop-blur-sm py-2 mb-1">
-                <span className="text-xs font-extrabold text-muted-foreground uppercase tracking-wider">
+              <div className="sticky top-14 z-10 glass py-2 mb-1 -mx-4 px-4">
+                <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                   {fmtGroupDate(logs[0].entry_time)}
                 </span>
               </div>
@@ -133,7 +133,7 @@ const HistoryPage = () => {
               {/* Desktop table */}
               <table className="hidden md:table w-full border-separate border-spacing-y-1">
                 <thead>
-                  <tr className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">
+                  <tr className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                     <th className="text-left px-3 py-1.5 w-[56px]">Hora</th>
                     <th className="text-left px-3 py-1.5 w-[120px]">Placa</th>
                     <th className="text-left px-3 py-1.5">Nome</th>
@@ -148,26 +148,26 @@ const HistoryPage = () => {
                     <tr
                       key={log.id}
                       onClick={() => { setSelectedLog(log); setSheetOpen(true); }}
-                      className="bg-card border border-border rounded-xl cursor-pointer transition-all hover:bg-accent/50 active:scale-[0.998]"
+                      className="bg-card border border-border/60 rounded-xl cursor-pointer transition-all hover:shadow-md active:scale-[0.998]"
                     >
-                      <td className="px-3 py-3 text-sm font-extrabold text-foreground rounded-l-xl">
+                      <td className="px-3 py-3 text-sm font-bold text-foreground rounded-l-xl">
                         {fmt(log.entry_time, "time")}
                       </td>
                       <td className="px-3 py-3">
                         {log.plate ? <PlateBadge plate={log.plate} size="sm" /> : <span className="text-xs text-muted-foreground">–</span>}
                       </td>
-                      <td className="px-3 py-3 text-sm font-bold text-foreground truncate uppercase max-w-0">{log.driver_name}</td>
-                      <td className="px-3 py-3 text-sm font-black text-foreground">{log.destination}</td>
-                      <td className="px-3 py-3 text-xs font-semibold text-muted-foreground truncate max-w-0">{log.authorized_by || "–"}</td>
-                      <td className="px-3 py-3 text-sm font-bold text-foreground">
+                      <td className="px-3 py-3 text-sm font-semibold text-foreground truncate uppercase max-w-0">{log.driver_name}</td>
+                      <td className="px-3 py-3 text-sm font-extrabold text-foreground">{log.destination}</td>
+                      <td className="px-3 py-3 text-xs font-medium text-muted-foreground truncate max-w-0">{log.authorized_by || "–"}</td>
+                      <td className="px-3 py-3 text-sm font-semibold text-foreground">
                         {log.exit_time ? fmt(log.exit_time, "time") : "–"}
                       </td>
                       <td className="px-3 py-3 rounded-r-xl">
                         <div className="flex items-center gap-1.5">
-                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
                             log.exit_time
                               ? "bg-muted text-muted-foreground"
-                              : "bg-warning/20 text-warning"
+                              : "bg-warning/15 text-warning"
                           }`}>
                             {log.exit_time ? "OK" : "ATIVO"}
                           </span>
@@ -180,36 +180,35 @@ const HistoryPage = () => {
               </table>
 
               {/* Mobile rows */}
-              <div className="md:hidden space-y-1">
+              <div className="md:hidden space-y-1.5">
                 {logs.map((log) => (
                   <button
                     key={log.id}
                     onClick={() => { setSelectedLog(log); setSheetOpen(true); }}
-                    className="w-full text-left rounded-xl bg-card border border-border px-4 py-3 transition-all hover:bg-accent/50 active:scale-[0.998] cursor-pointer"
+                    className="w-full text-left rounded-xl bg-card border border-border/60 px-4 py-3 transition-all hover:shadow-md active:scale-[0.998] cursor-pointer"
+                    style={{ boxShadow: '0 1px 3px 0 hsl(var(--foreground) / 0.03)' }}
                   >
                     <div className="flex flex-col gap-1.5">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-extrabold text-foreground">{fmt(log.entry_time, "time")}</span>
-                          <span className="text-lg font-black text-foreground">{log.destination}</span>
+                          <span className="text-sm font-bold text-foreground">{fmt(log.entry_time, "time")}</span>
+                          <span className="text-lg font-extrabold text-foreground">{log.destination}</span>
                         </div>
-                        <div className="flex items-center gap-1.5">
-                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                            log.exit_time
-                              ? "bg-muted text-muted-foreground"
-                              : "bg-warning/20 text-warning"
-                          }`}>
-                            {log.exit_time ? `↑${fmt(log.exit_time, "time")}` : "ATIVO"}
-                          </span>
-                        </div>
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
+                          log.exit_time
+                            ? "bg-muted text-muted-foreground"
+                            : "bg-warning/15 text-warning"
+                        }`}>
+                          {log.exit_time ? `↑${fmt(log.exit_time, "time")}` : "ATIVO"}
+                        </span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-foreground uppercase truncate">{log.driver_name}</span>
+                        <span className="text-sm font-semibold text-foreground/70 uppercase truncate">{log.driver_name}</span>
                         {log.plate && <PlateBadge plate={log.plate} size="sm" />}
                       </div>
                       <div className="flex items-center gap-2">
                         {log.authorized_by && (
-                          <span className="text-xs text-muted-foreground">lib: {log.authorized_by}</span>
+                          <span className="text-xs text-muted-foreground font-medium">lib: {log.authorized_by}</span>
                         )}
                         <DoormanTag userId={log.created_by} />
                       </div>
@@ -222,7 +221,6 @@ const HistoryPage = () => {
         </div>
       )}
 
-      {/* Detail Sheet */}
       <AccessLogSheet
         log={selectedLog}
         open={sheetOpen}
