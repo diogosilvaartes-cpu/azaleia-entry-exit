@@ -83,7 +83,7 @@ const AppLayout = ({ children, pageId }: Props) => {
                 return (
                   <Link key={to} to={to} className="flex-1 sm:flex-none">
                     <button
-                      className={`flex items-center justify-center gap-1.5 w-full rounded-xl px-3 sm:px-4 py-2.5 sm:py-2 text-[13px] sm:text-[13px] font-semibold transition-all duration-200 ${
+                      className={`flex items-center justify-center gap-1.5 w-full rounded-xl px-2 sm:px-4 py-2.5 sm:py-2 text-[13px] sm:text-[13px] font-semibold transition-all duration-200 overflow-hidden ${
                         isActive
                           ? isDashboard
                             ? "bg-primary text-primary-foreground shadow-md btn-glow"
@@ -93,8 +93,8 @@ const AppLayout = ({ children, pageId }: Props) => {
                             : "text-muted-foreground hover:text-foreground hover:bg-card/50"
                       }`}
                     >
-                      <Icon className="h-[18px] w-[18px] sm:h-4 sm:w-4" />
-                      <span className="text-[12px] sm:text-[13px]">{label}</span>
+                      <Icon className="h-[18px] w-[18px] sm:h-4 sm:w-4 shrink-0" />
+                      <span className="text-[11px] sm:text-[13px] truncate">{label}</span>
                     </button>
                   </Link>
                 );
