@@ -55,7 +55,7 @@ const Login = () => {
       <div
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat scale-105"
         style={{ backgroundImage: `url(${loginBg})` }} />
-      <div className="absolute inset-0 z-0 bg-foreground/50 backdrop-blur-[2px]" />
+      <div className="absolute inset-0 z-0 bg-foreground/50 backdrop-blur-[2px] opacity-0" />
 
       <div className="relative z-10 w-full max-w-md animate-slide-up">
         <div className="mb-8 text-center">
@@ -147,8 +147,8 @@ const Login = () => {
           </CardContent>
         </Card>
       </div>
-    </div>
-  );
+    </div>);
+
 };
 
 export default Login;
